@@ -2,7 +2,7 @@ const ModelTemario = require('./../model/temario');
 
 class Temario {
     constructor(router) {
-        router.get('/temario', this.obtenerTemario);
+        router.get('/', this.obtenerTemario);
     }
 
     async obtenerTemario(req, res) {
