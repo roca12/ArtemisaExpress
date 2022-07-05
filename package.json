@@ -6,7 +6,7 @@
     "start": "nodemon index.js",
     "lambda-serve": "netlify-lambda serve app",
     "lambda-build": "netlify-lambda build app",
-    "build":"npm build"
+    "build":"netlify-lambda build app"
   },
   "keywords": [],
   "author": "",
