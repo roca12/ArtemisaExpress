@@ -24,16 +24,9 @@ app.use(bodyParser.json());
 app.use(router);
 
 const initRouter = () => {
-    const api = [
-        {controller: '/temario', router: require('./controller/temario')},
-        {controller: '/problema', router: require('./controller/problema')},
-        {controller: '/usuario', router: require('./controller/usuario')}
-    ];
-    for (const routerController of api) {
-        const r = express.Router();
-        new routerController.router(r);
-        app.use(routerController.controller, r);
-    }
+    new (require('./controller/temario'))(router);
+    new (require('./controller/problema'))(router);
+    new (require('./controller/usuario'))(router);
 }
 
 const lambdaFunction = () => {

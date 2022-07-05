@@ -2,8 +2,8 @@ const ModelUsuario = require('./../model/usuario');
 
 class Usuario {
     constructor(router) {
-        router.post('/crear', this.crearUsuario);
-        router.post('/autenticar', this.autenticarUsuario)
+        router.post('/usuario/crear', this.crearUsuario);
+        router.post('/usuario/autenticar', this.autenticarUsuario)
     }
 
     async crearUsuario(req, res) {
