@@ -4,6 +4,7 @@ mongoose.Promise = global.Promise;
 configMongoose.temario = require('./temario.schema')(mongoose);
 configMongoose.problema = require('./problema.schema')(mongoose);
 configMongoose.usuario = require('./usuario.schema')(mongoose);
+configMongoose.link_valioso = require('./link_valioso.schema')(mongoose);
 module.exports = {
     configMongoose
 }

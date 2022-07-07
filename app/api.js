@@ -24,9 +24,10 @@ app.use(bodyParser.json());
 app.use(router);
 
 const initRouter = () => {
-    new (require('./controller/temario'))(router);
-    new (require('./controller/problema'))(router);
-    new (require('./controller/usuario'))(router);
+    const controllers = ['temario', 'problema', 'usuario', 'link_valioso'];
+    for (const controller of controllers) {
+        new (require(`./controller/${controller}`))(router);
+    }
 }
 
 const lambdaFunction = () => {
