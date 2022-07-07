@@ -6,6 +6,7 @@ const serverless = require("serverless-http");
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const logger = require('morgan');
+const cors = require('cors');
 
 const app = express();
 const router = express.Router();
@@ -22,6 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(router);
+app.use(cors({
+    origin: ['http://localhost:4200', 'https://biblioteca-artemisa.netlify.app']
+}));
 
 const initRouter = () => {
     const controllers = ['temario', 'problema', 'usuario', 'link_valioso'];
