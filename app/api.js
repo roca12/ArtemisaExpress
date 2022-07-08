@@ -24,7 +24,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(router);
 app.use(cors({
-    origin: ['http://localhost:4200', 'https://biblioteca-artemisa.netlify.app']
+    origin: ['http://localhost:3000', 'http://localhost:9000', 'http://localhost:4200', 'https://biblioteca-artemisa.netlify.app']
 }));
 
 const initRouter = () => {
