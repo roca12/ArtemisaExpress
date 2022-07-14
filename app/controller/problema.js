@@ -1,4 +1,4 @@
-const modelProblema = require('./../model/problema');
+const ModelProblema = require('./../model/problema');
 
 class Problema {
     constructor(router) {
@@ -7,12 +7,12 @@ class Problema {
     }
 
     async obtenerProblemas(req, res) {
-        res.send(await modelProblema.findAll());
+        res.send(await ModelProblema.findAll());
     }
 
     async crearProblema(req, res) {
         const problema = req.body;
-        res.send(await modelProblema.crearProblema(problema));
+        res.send(await ModelProblema.crearProblema(problema));
     }
 
 }
