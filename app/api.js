@@ -28,7 +28,7 @@ app.use(cors({
 }));
 
 const initRouter = () => {
-    const controllers = ['temario', 'problema', 'usuario', 'link_valioso'];
+    const controllers = ['temario', 'problema', 'usuario', 'link_valioso', 'calendario'];
     for (const controller of controllers) {
         new (require(`./controller/${controller}`))(router);
     }
