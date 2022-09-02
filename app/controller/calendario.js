@@ -2,7 +2,7 @@ const ModelCalendario = require('./../model/calendario');
 
 class Calendario {
     constructor(router) {
-        router.get('/calendario/', this.obtenerInformacionCalendario);
+        router.get('/', this.obtenerInformacionCalendario);
     }
 
     async obtenerInformacionCalendario(req, res){
