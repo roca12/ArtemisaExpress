@@ -18,8 +18,10 @@ exports.obtenerFechasCalendario = async function () {
                     params: {
                         key: 'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs',
                         singleEvents: true,
-                        timeMin: new Date(date.setMonth(date.getMonth() - 12)),
-                        timeMax: new Date(date.setMonth(date.getMonth() + 12)),
+                        maxAttendees: 1,
+                        maxResults: 250,
+                        timeMin: new Date(new Date().setMonth(date.getMonth() - 3)),
+                        timeMax: new Date(new Date().setMonth(date.getMonth() + 12)),
                         timeZone: 'America/Bogota',
                     }
                 });
