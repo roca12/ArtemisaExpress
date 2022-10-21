@@ -14,17 +14,20 @@ exports.obtenerFechasCalendario = async function () {
         ];
         return await Promise.all(
             listCalendars.map(async (e) => {
-                const data = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/${e}/events`, {
-                    params: {
-                        key: 'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs',
-                        singleEvents: true,
-                        maxAttendees: 1,
-                        maxResults: 250,
-                        timeMin: new Date(new Date().setMonth(date.getMonth() - 3)),
-                        timeMax: new Date(new Date().setMonth(date.getMonth() + 12)),
-                        timeZone: 'America/Bogota',
-                    }
-                });
+                const params = {
+                    key: 'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs',
+                    singleEvents: true,
+                    maxAttendees: 1,
+                    maxResults: 250,
+                    timeMin: new Date(new Date().setMonth(date.getMonth() - 3)).toISOString(),
+                    timeMax: new Date(new Date().setMonth(date.getMonth() + 3)).toISOString(),
+                    timeZone: 'America/Bogota',
+                };
+                const url = `https://clients6.google.com/calendar/v3/calendars/${e}/events?calendarId=${e}&singleEvents` +
+                    `=true&timeZone=${params['timeZone']}&maxAttendees=${params['maxAttendees']}&maxResults=` +
+                    `${params['maxResults']}&sanitizeHtml=true` +
+                    `&timeMin=${params['timeMin']}&timeMax=${params['timeMax']}&key=${params['key']}`
+                const data = await axios.get(url);
                 return data['data'];
             }));
     } catch (e) {
