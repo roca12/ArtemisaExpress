@@ -1,7 +1,15 @@
 const axios = require("axios");
 
-exports.obtenerFechasCalendario = async function () {
+async function promise(callback) {
     try {
+        return await callback();
+    } catch (e) {
+        throw e
+    }
+}
+
+async function getDataCalendars() {
+    return await promise(async () => {
         const date = new Date();
         const listCalendars = process.env.LIST_CALENDAR.toString().split(',');
         return await Promise.all(
@@ -22,7 +30,27 @@ exports.obtenerFechasCalendario = async function () {
                 const data = await axios.get(url);
                 return data['data'];
             }));
-    } catch (e) {
-        throw e;
-    }
+    })
+}
+
+exports.obtenerFechasCalendario = async function () {
+    return await promise(async () => {
+        const data = await getDataCalendars();
+        for (const i of data) {
+            (i?.items) && (i.items.length) && (() => {
+                const info = i['items'];
+                for (const j of info) {
+                    const validateUrl = () => {
+                        if(j?.location){
+                            return (j['location'].includes('http')) ? j['location'] : '';
+                        }
+                        return '';
+                    }
+                    j['url'] = validateUrl();
+                }
+            })();
+
+        }
+        return data;
+    });
 }

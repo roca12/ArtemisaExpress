@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "lambda-serve": "netlify-lambda serve app",
-    "lambda-build": "netlify-lambda build app",
-    "build": "netlify-lambda build app"
+    "lambda-serve": "netlify-lambda serve --config ./webpack.functions.js app",
+    "lambda-build": "netlify-lambda build --config ./webpack.functions.js app",
+    "build": "netlify-lambda build --config ./webpack.functions.js app"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "netlify-lambda": "^2.0.15",
     "nodemon": "^1.3.3",
     "path": "^0.12.7",
-    "serverless-http": "^3.0.1"
+    "serverless-http": "^3.0.1",
+    "webpack-node-externals": "^3.0.0"
   }
 }
