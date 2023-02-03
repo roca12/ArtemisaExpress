@@ -1,6 +1,8 @@
 const {configMongoose} = require('../database/database');
 const Usuario = configMongoose.usuario;
+const RutaComponents = configMongoose.ruta_component;
 const md5 = require('blueimp-md5');
+const jwt = require('jsonwebtoken');
 
 exports.crearUsuario = async function (usuario) {
     try {
@@ -31,9 +33,21 @@ exports.autenticarUsuario = async function (usuario) {
             searchUser = await Usuario.find({'user': usuario.user, 'password': usuario.password});
             if (searchUser.length) {
                 searchUser = searchUser[0];
+                searchUser.password = null;
             }
         })();
-        return searchUser;
+        return {
+            token: jwt.sign({
+                data: searchUser
+            }, process.env.JWT_KEY, {expiresIn: '1h'})
+        };
+    } catch (e) {
+        throw e;
+    }
+}
+exports.obtenerAccesosPorPerfil = async function (perfil) {
+    try {
+        return RutaComponents.find({'perfil': perfil});
     } catch (e) {
         throw e;
     }
