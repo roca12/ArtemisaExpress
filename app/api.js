@@ -10,6 +10,7 @@ const cors = require('cors');
 
 const app = express();
 const router = express.Router();
+
 dotenv.config();
 
 app.use(logger(`\u001b[36murl:\u001b[0m :url
@@ -26,6 +27,7 @@ app.use(router);
 app.use(cors({
     origin: process.env.CORS.toString().split(','),
 }));
+
 const initRouter = () => {
     const controllers = ['temario', 'problema', 'usuario', 'link_valioso', 'calendario'];
     for (const controller of controllers) {
