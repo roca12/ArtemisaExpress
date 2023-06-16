@@ -3,13 +3,20 @@ import {configMongoose} from "../config/dbConfig";
 
 const mg = configMongoose.mongoose;
 
+interface ILinkValioso {
+    nombre: string,
+    url: string,
+    tags: string,
+    icono: string,
+}
+
 class LinkValiosoSchema {
 
     constructor() {
     }
 
-    public init(): Model<any> {
-        const schema = new mg.Schema({
+    public init(): Model<ILinkValioso> {
+        const schema = new mg.Schema<ILinkValioso>({
             'nombre': {type: String},
             'url': {type: String},
             'tags': {type: String},
@@ -21,3 +28,4 @@ class LinkValiosoSchema {
 
 const linkValioso: LinkValiosoSchema = new LinkValiosoSchema();
 export default linkValioso;
+export {ILinkValioso};

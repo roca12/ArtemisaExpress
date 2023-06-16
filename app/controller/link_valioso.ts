@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 
-const ModelLinkValioso = require('./../model/link_valioso');
+import {default as ModelLinkValioso} from './../model/link_valioso';
 
 class LinkValioso {
     public router: Router = Router();

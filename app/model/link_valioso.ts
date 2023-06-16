@@ -1,11 +1,20 @@
 import {newConfigMongoose} from '../database/database';
 
-const LinkValioso = newConfigMongoose.link_valioso;
+const LinkValiosoDb = newConfigMongoose.link_valioso;
 
-exports.findAll = async function () {
-    try {
-        return {data: await LinkValioso.find({})};
-    } catch (e) {
-        throw e;
+class LinkValioso {
+    constructor() {
+    }
+
+
+    public async findAll() {
+        try {
+            return {data: await LinkValiosoDb.find({})};
+        } catch (e) {
+            throw e;
+        }
     }
 }
+
+const link = new LinkValioso();
+export default link;

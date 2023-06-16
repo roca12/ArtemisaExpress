@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const urlDatabase: string = process.env.DATABASE ?? '';
-const configMongoose: {
+
+interface IConfig {
     mongoose: Mongoose,
     url: string,
-} = {
+}
+
+const configMongoose: IConfig = {
     mongoose: new Mongoose(),
     url: urlDatabase,
 };

@@ -3,12 +3,27 @@ import {configMongoose} from "../config/dbConfig";
 
 const mg = configMongoose.mongoose;
 
+interface ITemario {
+    ID: number,
+    supergrupo: string,
+    tema: string,
+    texto: string,
+    complejidad_tiempo: string,
+    java: string,
+    cpp: string,
+    py: string,
+    orden: number,
+    suborden: number,
+    fecha_creacion: string,
+    fecha_modificacion: string
+}
+
 class TemarioSchema {
     constructor() {
     }
 
-    init(): Model<any> {
-        const schema = new mg.Schema({
+    public init(): Model<ITemario> {
+        const schema = new mg.Schema<ITemario>({
             'ID': {type: Number},
             'supergrupo': {type: String},
             'tema': {type: String},
@@ -29,3 +44,4 @@ class TemarioSchema {
 const temarioSchema = new TemarioSchema();
 
 export default temarioSchema;
+export {ITemario};

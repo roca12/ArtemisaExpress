@@ -11,6 +11,7 @@ import {configMongoose} from './config/dbConfig';
 import express, {Express, json, Router, urlencoded} from 'express';
 import calendar from './controller/calendario';
 import linkValioso from './controller/link_valioso';
+import problem from './controller/problema';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ class Api {
     routes(): void {
         this.router.use('/calendario', calendar);
         this.router.use('/link-valioso', linkValioso);
+        this.router.use('/problema', problem);
         this.app.use(this.router);
         this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
             res.status(404);
