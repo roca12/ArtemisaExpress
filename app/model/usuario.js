@@ -36,11 +36,11 @@ exports.autenticarUsuario = async function (usuario) {
                 searchUser.password = null;
             }
         })();
-        return {
+        return (searchUser.length) ? {
             token: jwt.sign({
                 data: searchUser
             }, process.env.JWT_KEY, {expiresIn: '1h'})
-        };
+        } : {};
     } catch (e) {
         throw e;
     }

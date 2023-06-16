@@ -1,5 +1,6 @@
-const {configMongoose} = require('../database/database');
-const LinkValioso = configMongoose.link_valioso;
+import {newConfigMongoose} from '../database/database';
+
+const LinkValioso = newConfigMongoose.link_valioso;
 
 exports.findAll = async function () {
     try {
