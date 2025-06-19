@@ -1,5 +1,6 @@
 "use strict";
 const express = require("express");
+const RateLimit = require("express-rate-limit");
 const path = require("path");
 const { configMongoose } = require("./config/dbConfig");
 const serverless = require("serverless-http");
@@ -10,6 +11,13 @@ const cors = require("cors");
 
 const app = express();
 const router = express.Router();
+
+const limiter = RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+});
+
+app.use(limiter);
 
 dotenv.config();
 
