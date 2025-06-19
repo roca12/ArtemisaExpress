@@ -1,13 +1,13 @@
-const ModelLinkValioso = require('./../model/link_valioso');
+const ModelLinkValioso = require("./../model/link_valioso");
 
 class LinkValioso {
-    constructor(router) {
-        router.get('/link-valioso/', this.obtenerLinksValiosos);
-    }
+  constructor(router) {
+    router.get("/link-valioso/", this.obtenerLinksValiosos);
+  }
 
-    async obtenerLinksValiosos(req, res) {
-        res.send(await ModelLinkValioso.findAll());
-    }
+  async obtenerLinksValiosos(req, res) {
+    res.send(await ModelLinkValioso.findAll());
+  }
 }
 
 module.exports = LinkValioso;
