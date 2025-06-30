@@ -63,6 +63,24 @@ exports.autenticarUsuario = async function (usuario) {
     throw e;
   }
 };
+
+exports.autenticarToken = async function (token) {
+  const params =  new URLSearchParams();
+  params.append("response", token);
+  params.append('secret', process.env.RECAPTCHA_SECRET_KEY);
+  try{
+    const response = await fetch(process.env.API_GOOGLE_CAPTCHA, {
+      method: 'POST',
+      body: params
+    });
+    const datos = await response.json();
+    return datos.success === true;
+  }catch(err){
+    console.error('Error el verificar captcha: ',err);
+    return false;
+  }
+}
+
 exports.obtenerAccesosPorPerfil = async function (perfil) {
   try {
     return RutaComponents.find({ perfil: perfil });
