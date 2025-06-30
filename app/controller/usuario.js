@@ -18,7 +18,6 @@ class Usuario {
     res.send(await ModelUsuario.autenticarToken(token));
   }
 
-
   async autenticarUsuario(req, res) {
     const { user, password } = req.body;
     res.send(await ModelUsuario.autenticarUsuario({ user, password }));
