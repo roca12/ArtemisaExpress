@@ -1,6 +1,6 @@
 const { configMongoose } = require("../database/database");
 const {response} = require("express");
-const Libro = configMongoose.problema;
+const Libro = configMongoose.libro;
 
 exports.findAll = async function () {
   try {

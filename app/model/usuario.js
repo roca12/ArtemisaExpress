@@ -65,21 +65,21 @@ exports.autenticarUsuario = async function (usuario) {
 };
 
 exports.autenticarToken = async function (token) {
-  const params =  new URLSearchParams();
+  const params = new URLSearchParams();
   params.append("response", token);
-  params.append('secret', process.env.RECAPTCHA_SECRET_KEY);
-  try{
+  params.append("secret", process.env.RECAPTCHA_SECRET_KEY);
+  try {
     const response = await fetch(process.env.API_GOOGLE_CAPTCHA, {
-      method: 'POST',
-      body: params
+      method: "POST",
+      body: params,
     });
     const datos = await response.json();
     return datos.success === true;
-  }catch(err){
-    console.error('Error el verificar captcha: ',err);
+  } catch (err) {
+    console.error("Error el verificar captcha: ", err);
     return false;
   }
-}
+};
 
 exports.obtenerAccesosPorPerfil = async function (perfil) {
   try {

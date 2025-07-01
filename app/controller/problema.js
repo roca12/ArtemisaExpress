@@ -2,8 +2,8 @@ const ModelProblema = require("./../model/problema");
 
 class Problema {
   constructor(router) {
-    router.get("/problema/", this.obtenerProblemas);
-    router.post("/problema/crear", this.crearProblema);
+    router.get("/problema/", this.obtenerProblemas.bind(this));
+    router.post("/problema/crear", this.crearProblema.bind(this));
   }
 
   async obtenerProblemas(req, res) {
