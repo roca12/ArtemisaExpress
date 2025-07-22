@@ -27,7 +27,10 @@ exports.mailVerifyTemplate = (username, verificationCode) => `
 
               <table border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
                 <tr>
-                  ${verificationCode.split('').map(char => `
+                  ${verificationCode
+                    .split("")
+                    .map(
+                      (char) => `
                     <td style="padding: 0 5px;">
                       <table border="0" cellspacing="0" cellpadding="0">
                         <tr>
@@ -37,7 +40,9 @@ exports.mailVerifyTemplate = (username, verificationCode) => `
                         </tr>
                       </table>
                     </td>
-                  `).join('')}
+                  `,
+                    )
+                    .join("")}
                 </tr>
               </table>
 

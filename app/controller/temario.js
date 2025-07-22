@@ -13,8 +13,6 @@ class Temario {
   async obtenerSupergrupos(req, res) {
     res.send(await ModelTemario.supergrupos());
   }
-
-
 }
 
 module.exports = Temario;

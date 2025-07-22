@@ -34,6 +34,7 @@ The script performs the following actions:
 ## Technical Details
 
 The script modifies the `ide.general.xml` file in your WebStorm configuration directory, which is typically located at:
+
 ```
 %APPDATA%\JetBrains\WebStorm<version>\options\ide.general.xml
 ```

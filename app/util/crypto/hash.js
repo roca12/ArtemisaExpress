@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const {text} = require("express");
+const crypto = require("crypto");
+const { text } = require("express");
 
-exports.sha256 = function(text){
-    return crypto.createHash('sha256').update(text).digest('hex');
+exports.sha256 = function (text) {
+  return crypto.createHash("sha256").update(text).digest("hex");
 };
