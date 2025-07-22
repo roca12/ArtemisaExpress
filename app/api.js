@@ -53,7 +53,8 @@ const initRouter = () => {
     'usuario',
     'link_valioso',
     'calendario',
-    'libro'
+    'libro',
+    'correo_confirmacion',
   ];
   controllers.forEach(name => new (require(`./controller/${name}`))(router));
 };

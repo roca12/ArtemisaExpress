@@ -1,13 +1,11 @@
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema(
     {
-      user: { type: String },
-      password: { type: String },
-      email: { type: String },
-      activo: { type: Number, default: 1 },
-      cod_perfil: { type: Number, default: 1 },
-      fecha_creacion: { type: String, default: new Date() },
-      fecha_modificacion: { type: String, default: new Date() },
+      contrasenia: { type: String },
+        rol: { type: String },
+        usuario: { type: String, unique: true,required: true },
+        correo: { type: String, unique: true,  required: true},
+        verificacion: { type: String },
     },
     { collection: "usuario" },
   );

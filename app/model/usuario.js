@@ -1,59 +1,52 @@
 const { configMongoose } = require("../database/database");
 const Usuario = configMongoose.usuario;
 const RutaComponents = configMongoose.ruta_component;
-const md5 = require("blueimp-md5");
+//const sha256 = require("blueimp-md5"); sha256
 const jwt = require("jsonwebtoken");
+const {sha256} = require("../util/crypto/hash");
 
 exports.crearUsuario = async function (usuario) {
+ try{
+   let newUser = {};
+   usuario &&
+       usuario.usuario &&
+        usuario.correo &&
+        usuario.contrasenia &&
+        usuario.rol &&
+        (await (async () => {
+            usuario.contrasenia = sha256(usuario.contrasenia);
+            newUser = await new Usuario(usuario).save();
+        })());
+  return newUser;
+ }catch(e){throw e}
+};
+
+exports.obtenerUsuario = async function (usuario) {
   try {
-    let newUser = {};
-    usuario.user &&
-      usuario.password &&
-      usuario.email &&
-      (await (async () => {
-        usuario.password = md5(usuario.password);
-        newUser = await new Usuario({
-          user: usuario.user,
-          password: usuario.password,
-          email: usuario.email,
-          activo: usuario.activo ?? 1,
-          cod_perfil: usuario.cod_perfil ?? null,
-          fecha_creacion: new Date()
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " "),
-          fecha_modificacion: new Date()
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " "),
-        }).save();
-      })());
-    return newUser;
+    return Usuario.find({ usuario: usuario });
   } catch (e) {
     throw e;
   }
-};
+}
 
-exports.autenticarUsuario = async function (usuario) {
+exports.autenticarUsuario = async function (user,password) {
   try {
     let searchUser = {};
-    usuario.user &&
-      usuario.password &&
+    user &&
+    password &&
       (await (async () => {
-        usuario.password = md5(usuario.password);
+          password = sha256(password);
         searchUser = await Usuario.find({
-          user: usuario.user,
-          password: usuario.password,
+          usuario: user,
+          contrasenia: password,
         });
-        if (searchUser.length) {
-          searchUser = searchUser[0];
-          searchUser.password = null;
-        }
       })());
     return {
       token: jwt.sign(
         {
-          data: searchUser,
+          usuario: searchUser.usuario,
+          correo: searchUser.correo,
+          rol: searchUser.rol,
         },
         process.env.JWT_KEY,
         { expiresIn: "1h" },
@@ -74,12 +67,14 @@ exports.autenticarToken = async function (token) {
       body: params,
     });
     const datos = await response.json();
+    console.log(datos);
     return datos.success === true;
   } catch (err) {
     console.error("Error el verificar captcha: ", err);
     return false;
   }
 };
+
 
 exports.obtenerAccesosPorPerfil = async function (perfil) {
   try {
