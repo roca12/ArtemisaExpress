@@ -1,6 +1,7 @@
-const crypto = require('crypto');
+const bcrypt = require("bcrypt");
 const {text} = require("express");
 
-exports.sha256 = function(text){
-    return crypto.createHash('sha256').update(text).digest('hex');
+exports.hashPassword = function (password) {
+    const saltRounds = 10;
+    return bcrypt.hashSync(password, saltRounds);
 };

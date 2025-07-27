@@ -1,9 +1,8 @@
 const { configMongoose } = require("../database/database");
 const Usuario = configMongoose.usuario;
 const RutaComponents = configMongoose.ruta_component;
-//const sha256 = require("blueimp-md5"); sha256
 const jwt = require("jsonwebtoken");
-const {sha256} = require("../util/crypto/hash");
+const {hashPassword} = require("../util/crypto/hash");
 
 exports.crearUsuario = async function (usuario) {
  try{
@@ -14,7 +13,7 @@ exports.crearUsuario = async function (usuario) {
         usuario.contrasenia &&
         usuario.rol &&
         (await (async () => {
-            usuario.contrasenia = sha256(usuario.contrasenia);
+            usuario.contrasenia = hashPassword(usuario.contrasenia);
             newUser = await new Usuario(usuario).save();
         })());
   return newUser;
@@ -35,7 +34,7 @@ exports.autenticarUsuario = async function (user,password) {
     user &&
     password &&
       (await (async () => {
-          password = sha256(password);
+          password = hashPassword(password);
         searchUser = await Usuario.find({
           usuario: user,
           contrasenia: password,
