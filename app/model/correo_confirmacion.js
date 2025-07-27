@@ -6,11 +6,11 @@ const CorreoConfirmacion = configMongoose.correo_confirmacion;
 exports.verificar = async function (correo, codigo) {
   let response;
   try {
-    response = await CorreoConfirmacion.findOne({correo: correo});
+    response = await CorreoConfirmacion.findOne({ correo: correo });
     return (
-        !response.usado &&
-        response.expiraEn > new Date(Date.now()) &&
-        response.codigo === sha256(codigo)
+      !response.usado &&
+      response.expiraEn > new Date(Date.now()) &&
+      response.codigo === sha256(codigo)
     );
   } catch (e) {
     throw e;
