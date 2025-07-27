@@ -14,13 +14,13 @@ exports.supergrupos = async function () {
     const resultado = await Temario.aggregate([
       {
         $group: {
-          _id: "$supergrupo"
-        }
-      }
+          _id: "$supergrupo",
+        },
+      },
     ]);
-    const nombres = resultado.map(item => item._id);
+    const nombres = resultado.map((item) => item._id);
     return { data: nombres };
   } catch (e) {
     throw e;
   }
-}
+};

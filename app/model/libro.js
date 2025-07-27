@@ -1,5 +1,5 @@
 const { configMongoose } = require("../database/database");
-const {response} = require("express");
+const { response } = require("express");
 const Libro = configMongoose.libro;
 
 exports.findAll = async function () {
@@ -11,21 +11,21 @@ exports.findAll = async function () {
 };
 
 exports.createbook = async function (libro) {
-    try {
-        let response = {};
-        libro &&
-            libro.titulo &&
-            libro.archivoPdf &&
-            libro.imagen &&
-        (await (async () => {
-            response = await new Libro({
-                titulo: libro.titulo,
-                archivoPdf: libro.archivoPdf,
-                imagen: libro.imagen,
-            }).save();
-        })());
+  try {
+    let response = {};
+    libro &&
+      libro.titulo &&
+      libro.archivoPdf &&
+      libro.imagen &&
+      (await (async () => {
+        response = await new Libro({
+          titulo: libro.titulo,
+          archivoPdf: libro.archivoPdf,
+          imagen: libro.imagen,
+        }).save();
+      })());
     return response;
-    }catch(e){
-        throw e;
-    }
-}
+  } catch (e) {
+    throw e;
+  }
+};
