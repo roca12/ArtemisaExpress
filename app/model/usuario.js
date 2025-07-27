@@ -2,22 +2,24 @@ const { configMongoose } = require("../database/database");
 const Usuario = configMongoose.usuario;
 const RutaComponents = configMongoose.ruta_component;
 const jwt = require("jsonwebtoken");
-const {hashPassword} = require("../util/crypto/hash");
+const { hashPassword } = require("../util/crypto/hash");
 
 exports.crearUsuario = async function (usuario) {
- try{
-   let newUser = {};
-   usuario &&
-       usuario.usuario &&
-        usuario.correo &&
-        usuario.contrasenia &&
-        usuario.rol &&
-        (await (async () => {
-            usuario.contrasenia = hashPassword(usuario.contrasenia);
-            newUser = await new Usuario(usuario).save();
-        })());
-  return newUser;
- }catch(e){throw e}
+  try {
+    let newUser = {};
+    usuario &&
+      usuario.usuario &&
+      usuario.correo &&
+      usuario.contrasenia &&
+      usuario.rol &&
+      (await (async () => {
+        usuario.contrasenia = hashPassword(usuario.contrasenia);
+        newUser = await new Usuario(usuario).save();
+      })());
+    return newUser;
+  } catch (e) {
+    throw e;
+  }
 };
 
 exports.obtenerUsuario = async function (usuario) {
@@ -26,15 +28,15 @@ exports.obtenerUsuario = async function (usuario) {
   } catch (e) {
     throw e;
   }
-}
+};
 
-exports.autenticarUsuario = async function (user,password) {
+exports.autenticarUsuario = async function (user, password) {
   try {
     let searchUser = {};
     user &&
-    password &&
+      password &&
       (await (async () => {
-          password = hashPassword(password);
+        password = hashPassword(password);
         searchUser = await Usuario.find({
           usuario: user,
           contrasenia: password,
@@ -73,7 +75,6 @@ exports.autenticarToken = async function (token) {
     return false;
   }
 };
-
 
 exports.obtenerAccesosPorPerfil = async function (perfil) {
   try {
