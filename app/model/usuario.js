@@ -68,7 +68,6 @@ exports.autenticarToken = async function (token) {
       body: params,
     });
     const datos = await response.json();
-    console.log(datos);
     return datos.success === true;
   } catch (err) {
     console.error("Error el verificar captcha: ", err);

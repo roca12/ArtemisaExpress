@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const RateLimit = require("express-rate-limit");
-const path = require("path");
 const { configMongoose } = require("./config/dbConfig");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");

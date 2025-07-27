@@ -1,5 +1,4 @@
 const ModelUsuario = require("./../model/usuario");
-const EmailService = require("../util/mail/email_service");
 
 class Usuario {
   constructor(router) {
