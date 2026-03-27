@@ -27,7 +27,7 @@ const allowedOrigins = rawOrigins
 
 app.use(
   cors({
-    origin: allowedOrigins.includes("*") ? "*" : allowedOrigins,
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
