@@ -6,7 +6,7 @@
     "start": "nodemon index.js",
     "lambda-serve": "netlify-lambda serve --config ./webpack.functions.js app",
     "lambda-build": "netlify-lambda build --config ./webpack.functions.js app",
-    "build": "netlify-lambda build --config ./webpack.functions.js app"
+    "build": "node ./node_modules/netlify-lambda/bin/netlify-lambda build --config ./webpack.functions.js app"
   },
   "keywords": [],
   "author": "",
