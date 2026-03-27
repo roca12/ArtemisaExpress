@@ -6,6 +6,10 @@ configMongoose.problema = require("./problema.schema")(mongoose);
 configMongoose.usuario = require("./usuario.schema")(mongoose);
 configMongoose.ruta_component = require("./ruta_component.schema")(mongoose);
 configMongoose.link_valioso = require("./link_valioso.schema")(mongoose);
+configMongoose.libro = require("./libro.schema")(mongoose);
+configMongoose.correo_confirmacion = require("./correo_confirmacion.schema")(
+  mongoose,
+);
 module.exports = {
   configMongoose,
 };

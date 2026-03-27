@@ -8,3 +8,19 @@ exports.findAll = async function () {
     throw e;
   }
 };
+
+exports.supergrupos = async function () {
+  try {
+    const resultado = await Temario.aggregate([
+      {
+        $group: {
+          _id: "$supergrupo",
+        },
+      },
+    ]);
+    const nombres = resultado.map((item) => item._id);
+    return { data: nombres };
+  } catch (e) {
+    throw e;
+  }
+};
