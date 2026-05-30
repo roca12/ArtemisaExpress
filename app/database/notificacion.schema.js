@@ -3,7 +3,6 @@ module.exports = (mongoose) => {
     {
       correo: {
         type: String,
-        //unique: true,
         required: true,
       },
       usuario: { type: String },
