@@ -1,17 +1,14 @@
 module.exports = (mongoose) => {
   const Schema = new mongoose.Schema(
-    {
-      correo: {
-        type: String,
-        required: true,
+      {
+          destino:{type: String, required: true},
+          tipo:{ type: String, required: true},
+          plantilla:{ type: String, required: true},
+          datos:{ type: mongoose.Schema.Types.Mixed}, //Payload flexible
+          enviado:{type: Boolean, default: false},
+          creadoEn:{type: Date, default: Date.now},
       },
-      usuario: { type: String },
-      codigo: { type: String },
-      usado: { type: Boolean },
-      creadoEn: { type: Date },
-      expiraEn: { type: Date },
-    },
-    { collection: "correo_confirmacion" },
+    { collection: "notificacion" },
   );
-  return mongoose.model("correo_confirmacion", Schema);
+  return mongoose.model("notificacion", Schema);
 };

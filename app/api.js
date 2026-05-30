@@ -54,7 +54,7 @@ const initRouter = () => {
     "link_valioso",
     "calendario",
     "libro",
-    "correo_confirmacion",
+    "notificacion",
   ];
   controllers.forEach((name) => new (require(`./controller/${name}`))(router));
 };

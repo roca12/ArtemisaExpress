@@ -1,4 +1,4 @@
-const ModelCalendario = require("./../model/calendario");
+const {obtenerCalendario} = require("../service/CalendarService");
 
 class Calendario {
   constructor(router) {
@@ -6,7 +6,12 @@ class Calendario {
   }
 
   async obtenerInformacionCalendario(req, res) {
-    res.send(await ModelCalendario.obtenerFechasCalendario());
+    try{
+      const data = await obtenerCalendario();
+      res.status(200).json(data);
+    }catch(e) {
+      res.status(e.statusCode || 500).json({ok:false, message: e.message});
+    }
   }
 }
 

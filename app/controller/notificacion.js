@@ -1,28 +1,42 @@
-const ModelCorreo = require("../model/correo_confirmacion");
+const NotificacionService = require("../service/NotificacionService");
+const EmailStrategy = require("../service/notificacion/EmailStrategy");
 
-class CorreoConfirmacion {
+class NotificacionController {
   constructor(router) {
-    router.post("/correo/enviar", this.enviarCorreo.bind(this));
-    router.post("/correo/validar", this.validarCodigo.bind(this));
-    router.post("/correo/reenviar", this.reenviarCorreo.bind(this));
+    this.service = new NotificacionService(new EmailStrategy());
+    router.post("/notificacion/enviar-codigo", this.enviarCodigo.bind(this));
+    router.post("/notificacion/reenviar-codigo", this.reenviarCodigo.bind(this));
+    router.post("/notificacion/validar-codigo", this.validarCodigo.bind(this));
   }
 
-  async enviarCorreo(req, res) {
-    const { correo, usuario } = req.body;
+  async enviarCodigo(req, res) {
+    const { destino, usuario } = req.body;
     try {
-      const resultado = await ModelCorreo.createOne(correo, usuario);
+      const resultado = await this.service.enviarCodigo(destino, usuario);
       res.status(200).json(resultado);
-    } catch (error) {}
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ok: false, error: error.message});
+    }
   }
 
-  async reenviarCorreo(req, res) {
-    const { correo, usuario } = req.body;
-    res.send(await ModelCorreo.reenviarCodigo(correo, usuario));
+  async reenviarCodigo(req, res) {
+    const {destino, usuario} = req.body;
+    try{
+      const response = await this.service.reenviarCodigo(destino, usuario);
+      res.status(200).json(response);
+    }catch(error){
+      res.status(error.statusCode || 500).json({ok: false, error: error.message});
+    }
   }
 
   async validarCodigo(req, res) {
-    const { correo, codigo } = req.body;
-    res.send(await ModelCorreo.verificar(correo, codigo));
+    const {destino, codigo} = req.body;
+    try{
+      const response = await this.service.validarCodigo(destino, codigo);
+      res.status(200).json(response);
+    }catch(error){
+      res.status(error.statusCode || 500).json({ok: false, error: error.message});
+    }
   }
 }
 
