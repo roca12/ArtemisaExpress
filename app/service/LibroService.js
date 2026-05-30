@@ -4,7 +4,7 @@ class LibroService {
         return ModelLibro.findAll();
     }
 
-    async crearLibro({titlo, archivoPdf, imagen}) {
+    async crearLibro({titulo, archivoPdf, imagen}) {
         if(!titulo) throw new Error("El título es obligatorio");
         if(!titulo) throw new Error("El archivo PDF es obligatorio");
         return ModelLibro.createbook({titlo, archivoPdf, imagen});
