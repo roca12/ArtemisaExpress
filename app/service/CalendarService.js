@@ -6,6 +6,10 @@ const CalendarioApiException = require("../exception/CalendarioApiException");
  * Servicio para la consulta de eventos del calendario de Google.
  */
 class CalendarioService {
+  constructor() {
+    this.listCalendars = process.env.LIST_CALENDAR?.toString().split(",") || [];
+  }
+
   /**
    * Obtiene los eventos de todos los calendarios configurados en un rango de ±3 meses.
    * @returns {Promise<CalendarioResponse>} Respuesta con los calendarios y sus eventos.
@@ -13,9 +17,8 @@ class CalendarioService {
   async obtenerCalendario() {
     try {
       const date = new Date();
-      const listCalendars = process.env.LIST_CALENDAR.toString().split(",");
       const data = await Promise.all(
-        listCalendars.map(async (e) => {
+        this.listCalendars.map(async (e) => {
           const timeMin = new Date(
             new Date().setMonth(date.getMonth() - 3),
           ).toISOString();
@@ -24,8 +27,8 @@ class CalendarioService {
           ).toISOString();
           const url =
             `${process.env.API_GOOGLE_CALENDAR}/${e}/events?calendarId=${e}` +
-            `&singleEvents=true&timeZone=America/Bogota&maxAttendees=1` +
-            `&maxResults=250&sanitizeHtml=true` +
+            "&singleEvents=true&timeZone=America/Bogota&maxAttendees=1" +
+            "&maxResults=250&sanitizeHtml=true" +
             `&timeMin=${timeMin}&timeMax=${timeMax}&key=${process.env.KEY_CALENDAR}`;
           const response = await axios.get(url);
           return response.data;
