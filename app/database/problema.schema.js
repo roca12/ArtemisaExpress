@@ -12,7 +12,7 @@ module.exports = (mongoose) => {
       tema_4: { type: String },
       url: { type: String },
     },
-    { collection: "problema" },
+    { collection: "Problemas" },
   );
   return mongoose.models.problema || mongoose.model("problema", schema);
 };

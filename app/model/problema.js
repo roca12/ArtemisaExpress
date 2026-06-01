@@ -6,7 +6,7 @@ const Problema = configMongoose.problema;
  * @returns {Promise<{data: Array}>} Objeto con la lista de problemas.
  */
 exports.findAll = function () {
-  return Problema.findAll();
+  return Problema.find({});
 };
 
 /**
