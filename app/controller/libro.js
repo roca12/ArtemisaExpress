@@ -14,12 +14,22 @@ class LibroController {
   }
 
   async obtenerLibros(req, res) {
-    res.send(await ModelLibro.findAll());
+    try{
+      const libros = await this.service.obtenerLibros();
+      res.status(200).json(libros);
+    }catch(err){
+      res.status(err.statusCode||500).json({ok:false, message:err.message});
+    }
   }
 
   async crearLibro(req, res) {
-    const libro = req.body;
-    res.send(await ModelLibro.createbook(libro));
+    try{
+      const {titulo,archivoPdf,imagen} = req.body;
+      const libro = this.service.crearLibro({titulo,archivoPdf,imagen});
+      res.status(200).json(libro);
+    }catch(err){
+      res.status(err.statusCode||500).json({ok:false, message:err.message});
+    }
   }
 
   async actualizarLibro(req, res) {

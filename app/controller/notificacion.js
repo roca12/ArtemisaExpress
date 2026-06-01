@@ -40,4 +40,4 @@ class NotificacionController {
   }
 }
 
-module.exports = CorreoConfirmacion;
+module.exports = NotificacionController;

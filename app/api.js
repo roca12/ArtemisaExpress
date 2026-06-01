@@ -16,6 +16,7 @@ const router = express.Router();
 const limiter = RateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
+    validate:{creationStack:false},
 });
 app.use(limiter);
 
