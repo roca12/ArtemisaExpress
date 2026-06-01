@@ -10,5 +10,5 @@ module.exports = (mongoose) => {
     },
     { collection: "notificacion" },
   );
-  return mongoose.models["notificacion"]||mongoose.model("notificacion", Schema);
+  return mongoose.models.notificacion||mongoose.model("notificacion", Schema);
 };

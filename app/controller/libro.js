@@ -60,8 +60,8 @@ class LibroController {
     try {
       const { id } = req.params;
       const { titulo } = req.body;
-      const archivoPdf = req.files?.["archivoPdf"]?.[0]?.path;
-      const imagen = req.files?.["imagen"]?.[0]?.path;
+      const archivoPdf = req.files?.archivoPdf?.[0]?.path;
+      const imagen = req.files?.imagen?.[0]?.path;
       const libro = await this.service.actualizarLibro(id, {
         titulo,
         archivoPdf,

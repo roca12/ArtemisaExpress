@@ -37,11 +37,11 @@ app.use(
 app.options("*", cors());
 app.use(
   logger(
-    `\u001b[36murl:\u001b[0m :url\n` +
-      `\u001b[36mmethod:\u001b[0m :method\n` +
-      `\u001b[36mstatus_code:\u001b[0m :status\n` +
-      `\u001b[36mtime:\u001b[0m :response-time ms\n` +
-      `\u001b[36mdate:\u001b[0m :date[iso]\n`,
+    "\u001b[36murl:\u001b[0m :url\n" +
+      "\u001b[36mmethod:\u001b[0m :method\n" +
+      "\u001b[36mstatus_code:\u001b[0m :status\n" +
+      "\u001b[36mtime:\u001b[0m :response-time ms\n" +
+      "\u001b[36mdate:\u001b[0m :date[iso]\n",
   ),
 );
 app.use(express.json());

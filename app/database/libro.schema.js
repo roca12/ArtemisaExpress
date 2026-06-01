@@ -7,5 +7,5 @@ module.exports = (mongoose) => {
     },
     { collection: "libro" },
   );
-  return  mongoose.models["libro"]||mongoose.model("libro", schema);
+  return  mongoose.models.libro||mongoose.model("libro", schema);
 };
