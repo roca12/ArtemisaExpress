@@ -18,8 +18,8 @@ class EmailStrategy extends NotificacionStrategy {
    * @param {string} datos.codigo - Código de verificación.
    * @returns {Promise<void>}
    */
-   async send(destino, datos) {
-     await this.sendVerificationCode(destino, datos.usuario, datos.codigo);
+  async send(destino, datos) {
+    await this.sendVerificationCode(destino, datos.usuario, datos.codigo);
   }
 }
 
