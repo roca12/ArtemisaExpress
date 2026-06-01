@@ -16,6 +16,7 @@ const router = express.Router();
 const limiter = RateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
+  validate: { creationStack: false },
 });
 app.use(limiter);
 
@@ -36,16 +37,19 @@ app.use(
 app.options("*", cors());
 app.use(
   logger(
-    `\u001b[36murl:\u001b[0m :url\n` +
-      `\u001b[36mmethod:\u001b[0m :method\n` +
-      `\u001b[36mstatus_code:\u001b[0m :status\n` +
-      `\u001b[36mtime:\u001b[0m :response-time ms\n` +
-      `\u001b[36mdate:\u001b[0m :date[iso]\n`,
+    "\u001b[36murl:\u001b[0m :url\n" +
+      "\u001b[36mmethod:\u001b[0m :method\n" +
+      "\u001b[36mstatus_code:\u001b[0m :status\n" +
+      "\u001b[36mtime:\u001b[0m :response-time ms\n" +
+      "\u001b[36mdate:\u001b[0m :date[iso]\n",
   ),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+/**
+ * Inicializa y registra todos los controladores de rutas en el router de Express.
+ */
 const initRouter = () => {
   const controllers = [
     "temario",
@@ -54,7 +58,7 @@ const initRouter = () => {
     "link_valioso",
     "calendario",
     "libro",
-    "correo_confirmacion",
+    "notificacion",
   ];
   controllers.forEach((name) => new (require(`./controller/${name}`))(router));
 };

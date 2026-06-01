@@ -1,3 +1,9 @@
+/**
+ * Genera la plantilla HTML del correo de verificación.
+ * @param {string} username - Nombre del usuario destinatario.
+ * @param {string} verificationCode - Código de verificación a mostrar.
+ * @returns {string} Contenido HTML del correo.
+ */
 exports.mailVerifyTemplate = (username, verificationCode) => `
 <!DOCTYPE html>
 <html>

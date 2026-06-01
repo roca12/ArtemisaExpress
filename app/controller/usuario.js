@@ -1,7 +1,11 @@
-const ModelUsuario = require("./../model/usuario");
+const UsuarioService = require("../service/UsuarioService");
 
+/**
+ * Controlador para las rutas relacionadas con los usuarios.
+ */
 class Usuario {
   constructor(router) {
+    this.service = new UsuarioService();
     router.post("/usuario/crear", this.crearUsuario.bind(this));
     router.post("/usuario/autenticar", this.autenticarUsuario.bind(this));
     router.post(
@@ -10,10 +14,15 @@ class Usuario {
     );
   }
 
+  /**
+   * Crea un nuevo usuario.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async crearUsuario(req, res) {
     const usuario = req.body;
     try {
-      const resultado = await ModelUsuario.crearUsuario(usuario);
+      const resultado = await this.service.crearUsuario(usuario);
       res.status(200).json(resultado);
     } catch (error) {
       if (error.code === 11000) {
@@ -33,15 +42,32 @@ class Usuario {
     }
   }
 
+  /**
+   * Autentica un token de captcha.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async autenticarCaptcha(req, res) {
-    const { token } = req.body;
-    res.send(await ModelUsuario.autenticarToken(token));
+    try {
+      const { token } = req.body;
+      const resultado = await this.service.autenticarToken(token);
+      res.status(200).json(resultado);
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
+    }
   }
 
+  /**
+   * Autentica un usuario con su nombre de usuario y contraseña.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async autenticarUsuario(req, res) {
     const { usuario, contrasenia } = req.body;
     try {
-      const resultado = await ModelUsuario.autenticarUsuario(
+      const resultado = await this.service.autenticarUsuario(
         usuario,
         contrasenia,
       );
