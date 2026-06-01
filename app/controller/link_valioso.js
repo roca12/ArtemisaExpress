@@ -10,39 +10,59 @@ class LinkValiosoController {
   }
 
   async obtenerLinksValiosos(req, res) {
-    try{
+    try {
       const links = await this.service.obtenerLinksValiosos();
       res.status(200).json(links);
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message: err.message});
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
   async crearLinkValioso(req, res) {
     try {
-      const {nombre,url,tags,icono} = req.body;
-      const link = await this.service.crearLinkValioso({nombre,url,tags,icono});
+      const { nombre, url, tags, icono } = req.body;
+      const link = await this.service.crearLinkValioso({
+        nombre,
+        url,
+        tags,
+        icono,
+      });
       res.status(201).json(link);
-    }catch (err){
-      res.status(err.statusCode || 500).json({ok:false, message: err.message});
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
   async actualizarLinkValioso(req, res) {
-    try{
-      const {id} = req.params;
-      const {nombre,url,tags,icono} = req.body;
-      const link = await this.service.actualizarLinkValioso(id, {nombre,url,tags,icono});
+    try {
+      const { id } = req.params;
+      const { nombre, url, tags, icono } = req.body;
+      const link = await this.service.actualizarLinkValioso(id, {
+        nombre,
+        url,
+        tags,
+        icono,
+      });
       res.status(200).json(link);
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message: err.message});
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
   async eliminarLinkValioso(req, res) {
-    try{
-      const {id} = req.params;
+    try {
+      const { id } = req.params;
       await this.service.eliminarLinkValioso(id);
-      res.status(200).json({ok:true, message:"Link eliminado exitosamente"});
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message: err.message});
+      res
+        .status(200)
+        .json({ ok: true, message: "Link eliminado exitosamente" });
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 }
