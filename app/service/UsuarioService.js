@@ -26,10 +26,17 @@ class UsuarioService {
    */
   async autenticarUsuario(usuario, contrasenia) {
     const password = hashPassword(contrasenia);
-    const [searchUser] = await ModelUsuario.findByCredentials(usuario, password);
+    const [searchUser] = await ModelUsuario.findByCredentials(
+      usuario,
+      password,
+    );
     return {
       token: jwt.sign(
-        { usuario: searchUser.usuario, correo: searchUser.correo, rol: searchUser.rol },
+        {
+          usuario: searchUser.usuario,
+          correo: searchUser.correo,
+          rol: searchUser.rol,
+        },
         process.env.JWT_KEY,
         { expiresIn: "1h" },
       ),

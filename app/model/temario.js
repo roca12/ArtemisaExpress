@@ -6,7 +6,7 @@ const Temario = configMongoose.temario;
  * @returns {Promise<{data: Array}>} Objeto con la lista de temarios.
  */
 exports.findAll = async function () {
-  return  await Temario.findAll();
+  return await Temario.findAll();
 };
 
 /**
@@ -14,12 +14,12 @@ exports.findAll = async function () {
  * @returns {Promise<{data: string[]}>} Objeto con la lista de nombres de supergrupos.
  */
 exports.supergrupos = async function () {
-    const resultado = await Temario.aggregate([
-      {
-        $group: {
-          _id: "$supergrupo",
-        },
+  const resultado = await Temario.aggregate([
+    {
+      $group: {
+        _id: "$supergrupo",
       },
-    ]);
-    return resultado.map((item) => item._id);
+    },
+  ]);
+  return resultado.map((item) => item._id);
 };
