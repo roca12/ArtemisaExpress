@@ -1,5 +1,9 @@
 version = 1
 
+exclude_patterns = [
+    "functions/**"
+]
+
 [[analyzers]]
 name = "javascript"
 
@@ -8,10 +12,6 @@ name = "javascript"
     "nodejs",
     "mongo"
   ]
-
-exclude_patterns = [
-    "functions/**"
-]
 
 [[transformers]]
 name = "prettier"
