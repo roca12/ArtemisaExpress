@@ -9,5 +9,9 @@ name = "javascript"
     "mongo"
   ]
 
+exclude_patterns = [
+    "functions/**"
+]
+
 [[transformers]]
 name = "prettier"
