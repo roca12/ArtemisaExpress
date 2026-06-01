@@ -3,6 +3,8 @@
  * Debe ser extendida por cada implementación concreta.
  */
 class NotificacionStrategy {
+
+
   /**
    * Tipo de canal de notificación (p. ej. 'email', 'sms').
    * @type {string}

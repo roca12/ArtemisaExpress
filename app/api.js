@@ -15,8 +15,10 @@ const router = express.Router();
 
 const limiter = RateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
-  validate: { creationStack: false },
+  max: 200,
+  validate: { creationStack: false, ip: false },
+  keyGenerator: (req) =>
+    req.ip || req.headers["x-forwarded-for"] || "anonymous",
 });
 app.use(limiter);
 
