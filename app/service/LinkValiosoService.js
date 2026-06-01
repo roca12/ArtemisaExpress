@@ -53,10 +53,22 @@ class LinkValiosoService {
       throw new Error("La URL no es válida");
     let datos = {};
     let flag = false;
-    if (nombre) { datos.nombre = nombre; flag = true; }
-    if (url) { datos.url = url; flag = true; }
-    if (tags) { datos.tags = tags; flag = true; }
-    if (icono) { datos.icono = icono; flag = true; }
+    if (nombre) {
+      datos.nombre = nombre;
+      flag = true;
+    }
+    if (url) {
+      datos.url = url;
+      flag = true;
+    }
+    if (tags) {
+      datos.tags = tags;
+      flag = true;
+    }
+    if (icono) {
+      datos.icono = icono;
+      flag = true;
+    }
     if (!flag)
       throw new Error("Es necesario que alguno de los campos no esté vacío");
     return await this.model.updateOne({ id, datos });

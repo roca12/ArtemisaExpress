@@ -3,8 +3,7 @@ const ModelLibro = require("../model/libro");
  * Servicio para la gestión de libros.
  */
 class LibroService {
-
-  constructor(){
+  constructor() {
     this.model = ModelLibro;
   }
   /**

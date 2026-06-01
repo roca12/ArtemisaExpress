@@ -33,7 +33,11 @@ class UsuarioService {
     const [searchUser] = await this.model.findByCredentials(usuario, password);
     return {
       token: jwt.sign(
-        { usuario: searchUser.usuario, correo: searchUser.correo, rol: searchUser.rol },
+        {
+          usuario: searchUser.usuario,
+          correo: searchUser.correo,
+          rol: searchUser.rol,
+        },
         process.env.JWT_KEY,
         { expiresIn: "1h" },
       ),
