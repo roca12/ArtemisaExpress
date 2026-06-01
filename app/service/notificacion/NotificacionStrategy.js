@@ -16,7 +16,7 @@ class NotificacionStrategy {
    * @param {Object} _datos - Datos a incluir en la notificación.
    * @returns {Promise<void>}
    */
-  async send(_destino, _datos) {
+  send(_destino, _datos) {
     throw new Error(
       `${this.constructor.name} debe implementar 'send(destino,datos)'`,
     );

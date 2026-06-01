@@ -48,9 +48,9 @@ class UsuarioService {
   async autenticarToken(token) {
     const params = new URLSearchParams();
     params.append("response", token);
-    params.append("secret", process.env.RECAPTCHA_SECRET_KEY);
+    params.append("secret", this.captchaSecret);
     try {
-      const response = await fetch(process.env.API_GOOGLE_CAPTCHA, {
+      const response = await fetch(this.captchaUrl, {
         method: "POST",
         body: params,
       });

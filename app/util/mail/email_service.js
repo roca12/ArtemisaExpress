@@ -1,6 +1,9 @@
 const nodemailer = require("nodemailer");
 const templates = require("./emailTemplates");
 
+/**
+ * Transportador de correo configurado con Gmail usando credenciales de entorno.
+ */
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -42,5 +45,5 @@ exports.sendMail = async function (to, subject, htmlContent) {
  */
 exports.sendVerificationCode = async function (to, username, code) {
   const htmlContent = templates.mailVerifyTemplate(username, code);
-  return exports.sendMail(to, "Codigo Verificación", htmlContent);
+  return await exports.sendMail(to, "Codigo Verificación", htmlContent);
 };

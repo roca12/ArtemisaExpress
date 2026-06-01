@@ -5,14 +5,11 @@ const { sendVerificationCode } = require("../../util/mail/email_service");
  * Implementación de NotificacionStrategy para el envío de notificaciones por correo electrónico.
  */
 class EmailStrategy extends NotificacionStrategy {
-  /**
-   * Tipo de canal: 'email'.
-   * @returns {string}
-   */
-  get tipo() {
-    return "email";
+  constructor() {
+    super();
+    this.tipo = "email";
+    this.sendVerificationCode = sendVerificationCode;
   }
-
   /**
    * Envía el código de verificación por correo electrónico.
    * @param {string} destino - Correo electrónico destinatario.
@@ -21,8 +18,8 @@ class EmailStrategy extends NotificacionStrategy {
    * @param {string} datos.codigo - Código de verificación.
    * @returns {Promise<void>}
    */
-  async send(destino, datos) {
-    await sendVerificationCode(destino, datos.usuario, datos.codigo);
+   async send(destino, datos) {
+     await this.sendVerificationCode(destino, datos.usuario, datos.codigo);
   }
 }
 

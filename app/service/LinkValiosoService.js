@@ -51,7 +51,7 @@ class LinkValiosoService {
     if (!icono) throw new Error("El icono es obligatorio");
     if (url && !urlValidator.esUrlValida(url))
       throw new Error("La URL no es válida");
-    let datos = {};
+    const datos = {};
     let flag = false;
     if (nombre) { datos.nombre = nombre; flag = true; }
     if (url) { datos.url = url; flag = true; }
