@@ -47,6 +47,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+/**
+ * Inicializa y registra todos los controladores de rutas en el router de Express.
+ */
 const initRouter = () => {
   const controllers = [
     "temario",

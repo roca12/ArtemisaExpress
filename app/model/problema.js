@@ -1,6 +1,10 @@
 const { configMongoose } = require("../database/database");
 const Problema = configMongoose.problema;
 
+/**
+ * Obtiene todos los problemas de la base de datos.
+ * @returns {Promise<{data: Array}>} Objeto con la lista de problemas.
+ */
 exports.findAll = async function () {
   try {
     return { data: await Problema.find({}) };
@@ -9,6 +13,11 @@ exports.findAll = async function () {
   }
 };
 
+/**
+ * Crea y guarda un nuevo problema en la base de datos.
+ * @param {Object} problema - Datos del problema.
+ * @returns {Promise<Object>} Problema creado.
+ */
 exports.crearProblema = async function (problema) {
   try {
     let response = {};

@@ -1,5 +1,8 @@
 const LinkValiosoService = require("../service/LinkValiosoService");
 
+/**
+ * Controlador para las rutas relacionadas con los links valiosos.
+ */
 class LinkValiosoController {
   constructor(router) {
     this.service = new LinkValiosoService();
@@ -9,6 +12,11 @@ class LinkValiosoController {
     router.delete("/link-valioso/:id", this.eliminarLinkValioso.bind(this));
   }
 
+  /**
+   * Obtiene todos los links valiosos.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async obtenerLinksValiosos(req, res) {
     try {
       const links = await this.service.obtenerLinksValiosos();
@@ -19,6 +27,11 @@ class LinkValiosoController {
         .json({ ok: false, message: err.message });
     }
   }
+  /**
+   * Crea un nuevo link valioso.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async crearLinkValioso(req, res) {
     try {
       const { nombre, url, tags, icono } = req.body;
@@ -35,6 +48,11 @@ class LinkValiosoController {
         .json({ ok: false, message: err.message });
     }
   }
+  /**
+   * Actualiza un link valioso existente por ID.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async actualizarLinkValioso(req, res) {
     try {
       const { id } = req.params;
@@ -52,6 +70,11 @@ class LinkValiosoController {
         .json({ ok: false, message: err.message });
     }
   }
+  /**
+   * Elimina un link valioso por ID.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async eliminarLinkValioso(req, res) {
     try {
       const { id } = req.params;

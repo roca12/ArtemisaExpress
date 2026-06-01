@@ -1,5 +1,8 @@
 const ModelUsuario = require("./../model/usuario");
 
+/**
+ * Controlador para las rutas relacionadas con los usuarios.
+ */
 class Usuario {
   constructor(router) {
     router.post("/usuario/crear", this.crearUsuario.bind(this));
@@ -10,6 +13,11 @@ class Usuario {
     );
   }
 
+  /**
+   * Crea un nuevo usuario.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async crearUsuario(req, res) {
     const usuario = req.body;
     try {
@@ -33,11 +41,21 @@ class Usuario {
     }
   }
 
+  /**
+   * Autentica un token de captcha.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async autenticarCaptcha(req, res) {
     const { token } = req.body;
     res.send(await ModelUsuario.autenticarToken(token));
   }
 
+  /**
+   * Autentica un usuario con su nombre de usuario y contraseña.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async autenticarUsuario(req, res) {
     const { usuario, contrasenia } = req.body;
     try {

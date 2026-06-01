@@ -1,6 +1,9 @@
 const NotificacionService = require("../service/NotificacionService");
 const EmailStrategy = require("../service/notificacion/EmailStrategy");
 
+/**
+ * Controlador para las rutas relacionadas con las notificaciones.
+ */
 class NotificacionController {
   constructor(router) {
     this.service = new NotificacionService(new EmailStrategy());
@@ -12,6 +15,11 @@ class NotificacionController {
     router.post("/notificacion/validar-codigo", this.validarCodigo.bind(this));
   }
 
+  /**
+   * Envía un código de verificación al destino indicado.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async enviarCodigo(req, res) {
     const { destino, usuario } = req.body;
     try {
@@ -24,6 +32,11 @@ class NotificacionController {
     }
   }
 
+  /**
+   * Reenvía el código de verificación al destino indicado.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async reenviarCodigo(req, res) {
     const { destino, usuario } = req.body;
     try {
@@ -36,6 +49,11 @@ class NotificacionController {
     }
   }
 
+  /**
+   * Valida el código de verificación enviado al destino.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async validarCodigo(req, res) {
     const { destino, codigo } = req.body;
     try {

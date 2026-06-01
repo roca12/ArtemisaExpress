@@ -1,3 +1,6 @@
+/**
+ * DTO que representa un evento individual del calendario.
+ */
 class CalendarioEventResponse {
   constructor(item) {
     this.id = item.id;

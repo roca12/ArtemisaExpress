@@ -4,6 +4,11 @@ const RutaComponents = configMongoose.ruta_component;
 const jwt = require("jsonwebtoken");
 const { hashPassword } = require("../util/crypto/hash");
 
+/**
+ * Crea un nuevo usuario en la base de datos hasheando su contraseña.
+ * @param {Object} usuario - Datos del usuario a crear.
+ * @returns {Promise<Object>} Usuario creado.
+ */
 exports.crearUsuario = async function (usuario) {
   try {
     let newUser = {};
@@ -22,6 +27,11 @@ exports.crearUsuario = async function (usuario) {
   }
 };
 
+/**
+ * Busca un usuario por nombre de usuario.
+ * @param {string} usuario - Nombre de usuario a buscar.
+ * @returns {Promise<Array>} Lista de usuarios encontrados.
+ */
 exports.obtenerUsuario = async function (usuario) {
   try {
     return Usuario.find({ usuario: usuario });
@@ -30,6 +40,12 @@ exports.obtenerUsuario = async function (usuario) {
   }
 };
 
+/**
+ * Autentica un usuario y retorna un token JWT.
+ * @param {string} user - Nombre de usuario.
+ * @param {string} password - Contraseña en texto plano.
+ * @returns {Promise<{token: string}>} Objeto con el token JWT.
+ */
 exports.autenticarUsuario = async function (user, password) {
   try {
     let searchUser = {};
@@ -58,6 +74,11 @@ exports.autenticarUsuario = async function (user, password) {
   }
 };
 
+/**
+ * Valida un token de reCAPTCHA contra la API de Google.
+ * @param {string} token - Token de reCAPTCHA a verificar.
+ * @returns {Promise<boolean>} `true` si el token es válido.
+ */
 exports.autenticarToken = async function (token) {
   const params = new URLSearchParams();
   params.append("response", token);
@@ -75,6 +96,11 @@ exports.autenticarToken = async function (token) {
   }
 };
 
+/**
+ * Obtiene las rutas y componentes accesibles para un perfil de usuario.
+ * @param {string} perfil - Nombre del perfil (rol).
+ * @returns {Promise<Array>} Lista de rutas y componentes del perfil.
+ */
 exports.obtenerAccesosPorPerfil = async function (perfil) {
   try {
     return RutaComponents.find({ perfil: perfil });
