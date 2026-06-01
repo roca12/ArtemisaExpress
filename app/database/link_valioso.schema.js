@@ -8,5 +8,7 @@ module.exports = (mongoose) => {
     },
     { collection: "link_valioso" },
   );
-  return mongoose.models["link_valioso"]||mongoose.model("link_valioso", schema);
+  return (
+    mongoose.models["link_valioso"] || mongoose.model("link_valioso", schema)
+  );
 };
