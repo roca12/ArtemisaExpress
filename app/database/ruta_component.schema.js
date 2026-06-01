@@ -11,5 +11,7 @@ module.exports = (mongoose) => {
     },
     { collection: "ruta_component" },
   );
-  return mongoose.models.ruta_component||mongoose.model("ruta_component", schema);
+  return (
+    mongoose.models.ruta_component || mongoose.model("ruta_component", schema)
+  );
 };

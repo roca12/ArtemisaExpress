@@ -16,5 +16,5 @@ module.exports = (mongoose) => {
     },
     { collection: "temario" },
   );
-  return mongoose.models.temario||mongoose.model("temario", schema);
+  return mongoose.models.temario || mongoose.model("temario", schema);
 };

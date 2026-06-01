@@ -53,7 +53,9 @@ class Usuario {
       const resultado = await this.service.autenticarToken(token);
       res.status(200).json(resultado);
     } catch (err) {
-      res.status(err.statusCode || 500).json({ ok: false, message: err.message });
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 
@@ -65,7 +67,10 @@ class Usuario {
   async autenticarUsuario(req, res) {
     const { usuario, contrasenia } = req.body;
     try {
-      const resultado = await this.service.autenticarUsuario(usuario, contrasenia);
+      const resultado = await this.service.autenticarUsuario(
+        usuario,
+        contrasenia,
+      );
       res.status(200).json(resultado);
     } catch (error) {
       console.error("Usuario o contraseña invalidos: ", error);

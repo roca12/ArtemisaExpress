@@ -18,11 +18,13 @@ class Problema {
    * @param {import('express').Response} res - Objeto de respuesta de Express.
    */
   async obtenerProblemas(req, res) {
-    try{
+    try {
       const problemas = await this.service.obtenerProblemas();
       res.status(200).json(problemas);
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message:err.message});
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 
@@ -32,23 +34,34 @@ class Problema {
    * @param {import('express').Response} res - Objeto de respuesta de Express.
    */
   async crearProblema(req, res) {
-    try{
-      const {titulo, juez, alias, dificultad, tema_1, tema_2, tema_3, tema_4, url} = req.body;
-      const problema = await this.service.crearProblema(
-          {
-            titulo,
-            juez,
-            alias,
-            dificultad,
-            tema_1,
-            tema_2,
-            tema_3,
-            tema_4,
-            url
-          });
+    try {
+      const {
+        titulo,
+        juez,
+        alias,
+        dificultad,
+        tema_1,
+        tema_2,
+        tema_3,
+        tema_4,
+        url,
+      } = req.body;
+      const problema = await this.service.crearProblema({
+        titulo,
+        juez,
+        alias,
+        dificultad,
+        tema_1,
+        tema_2,
+        tema_3,
+        tema_4,
+        url,
+      });
       res.status(200).json(problema);
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message:err.message});
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 
@@ -58,35 +71,49 @@ class Problema {
    * @param {import('express').Response} res - Objeto de respuesta de Express.
    */
   async actualizarProblema(req, res) {
-    try{
-      const {id} = req.params.id;
-      const {titulo, juez, alias, dificultad, tema_1, tema_2, tema_3, tema_4, url} = req.body;
-      const problema = await this.service.actualizarProblema(
-          id,
-          {
-            titulo,
-            juez,
-            alias,
-            dificultad,
-            tema_1,
-            tema_2,
-            tema_3,
-            tema_4,
-            url
-          });
+    try {
+      const { id } = req.params.id;
+      const {
+        titulo,
+        juez,
+        alias,
+        dificultad,
+        tema_1,
+        tema_2,
+        tema_3,
+        tema_4,
+        url,
+      } = req.body;
+      const problema = await this.service.actualizarProblema(id, {
+        titulo,
+        juez,
+        alias,
+        dificultad,
+        tema_1,
+        tema_2,
+        tema_3,
+        tema_4,
+        url,
+      });
       res.status(200).json(problema);
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message:err.message});
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 
   async eliminarProblema(req, res) {
-    try{
-      const {id} = req.params;
+    try {
+      const { id } = req.params;
       await this.service.eliminarProblema(id);
-      res.status(200).json({ok:true, message: "Problema eliminado exitosamente."});
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false, message:err.message});
+      res
+        .status(200)
+        .json({ ok: true, message: "Problema eliminado exitosamente." });
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 }

@@ -9,5 +9,5 @@ module.exports = (mongoose) => {
     },
     { collection: "usuario" },
   );
-  return mongoose.models.usuario||mongoose.model("usuario", schema);
+  return mongoose.models.usuario || mongoose.model("usuario", schema);
 };

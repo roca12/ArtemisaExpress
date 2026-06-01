@@ -14,5 +14,5 @@ module.exports = (mongoose) => {
     },
     { collection: "problema" },
   );
-  return mongoose.models.problema||mongoose.model("problema", schema);
+  return mongoose.models.problema || mongoose.model("problema", schema);
 };

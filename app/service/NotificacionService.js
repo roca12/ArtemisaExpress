@@ -16,8 +16,8 @@ class NotificacionService {
    */
   async enviarCodigo(destino, usuario) {
     const codigo = _generarCodigo();
-    if(!destino) throw new Error("El destino es obligatorio");
-    if(!usuario) throw new Error("La información del usuario es obligatoria");
+    if (!destino) throw new Error("El destino es obligatorio");
+    if (!usuario) throw new Error("La información del usuario es obligatoria");
     const doc = await ModelNotificacion.createOne({
       destino,
       tipo: this.strategy.tipo,
@@ -44,8 +44,8 @@ class NotificacionService {
    * @returns {Promise<Object>} Resultado del reenvío.
    */
   async reenviarCodigo(destino, usuario) {
-    if(!destino) throw new Error("El destino es obligatorio");
-    if(!usuario) throw new Error("La información del usuario es obligatoria");
+    if (!destino) throw new Error("El destino es obligatorio");
+    if (!usuario) throw new Error("La información del usuario es obligatoria");
     const codigo = _generarCodigo();
     await ModelNotificacion.updateOne(destino, "verificacion", {
       usuario,
@@ -67,7 +67,7 @@ class NotificacionService {
    * @returns {Promise<boolean>} `true` si el código es válido, `false` en caso contrario.
    */
   async validarCodigo(destino, codigo) {
-    if(!destino) throw new Error("El destino es obligatorio");
+    if (!destino) throw new Error("El destino es obligatorio");
     const doc = await ModelNotificacion.findOne(destino, "verificacion");
     if (!doc) return false;
     return (

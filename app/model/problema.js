@@ -15,7 +15,7 @@ exports.findAll = async function () {
  * @returns {Promise<Object>} Problema creado.
  */
 exports.crearProblema = async function (data) {
-   return await new Problema(data).save();
+  return await new Problema(data).save();
 };
 
 /**
@@ -24,14 +24,14 @@ exports.crearProblema = async function (data) {
  * @param data los nuevos datos del problema
  * @returns {Promise<Object>} el problema actualizado.
  */
-exports.actualizarProblema = async function ({id, data}) {
-  return await Problema.findOneAndUpdate({_id:id}, data, { new: true });
-}
+exports.actualizarProblema = async function ({ id, data }) {
+  return await Problema.findOneAndUpdate({ _id: id }, data, { new: true });
+};
 /**
  * Busca un problema a partir de su id y lo elimina
  * @param id el identificador único del problema
  * @returns {Promise<Object>} La confirmacin de eliminación.
  */
 exports.eliminarProblema = async function (id) {
-  return await Problema.findOneAndDelete({_id: id});
-}
+  return await Problema.findOneAndDelete({ _id: id });
+};

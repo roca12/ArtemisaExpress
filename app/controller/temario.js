@@ -20,7 +20,9 @@ class Temario {
       const temario = await this.service.obtenerTemario();
       res.status(200).json(temario);
     } catch (err) {
-      res.status(err.statusCode || 500).json({ ok: false, message: err.message });
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 
@@ -34,7 +36,9 @@ class Temario {
       const supergrupos = await this.service.obtenerSupergrupos();
       res.status(200).json(supergrupos);
     } catch (err) {
-      res.status(err.statusCode || 500).json({ ok: false, message: err.message });
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 }
