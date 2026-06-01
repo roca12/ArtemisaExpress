@@ -18,7 +18,7 @@ export class RegisterRequest {
     if (!this.correo) errors.push("El correo es requerido.");
     if (!this.contrasenia) errors.push("La contraseña es requerida.");
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (this.correo && !this.correo.match(emailRegex))
+    if (this.correo && !emailRegex.test(this.correo))
       errors.push("El correo no es válido.");
     return errors;
   }

@@ -5,7 +5,7 @@ const Libro = configMongoose.libro;
  * Obtiene todos los libros de la base de datos.
  * @returns {Promise<Array>} Lista de libros.
  */
-exports.findAll = async function () {
+exports.findAll = function () {
   return Libro.find({});
 };
 
@@ -17,7 +17,7 @@ exports.findAll = async function () {
  * @param {string} datos.imagen - URL de la imagen de portada.
  * @returns {Promise<Object>} Instancia del libro creado.
  */
-exports.createbook = async function ({ titulo, archivoPdf, imagen }) {
+exports.createbook = function ({ titulo, archivoPdf, imagen }) {
   return new Libro({ titulo, archivoPdf, imagen });
 };
 
@@ -28,7 +28,7 @@ exports.createbook = async function ({ titulo, archivoPdf, imagen }) {
  * @param {Object} params.datos - Campos a actualizar.
  * @returns {Promise<Object|null>} Libro actualizado o null.
  */
-exports.updatebook = async function ({ id, datos }) {
+exports.updatebook = function ({ id, datos }) {
   return Libro.findByIdAndUpdate(id, datos, { new: true });
 };
 
@@ -38,6 +38,6 @@ exports.updatebook = async function ({ id, datos }) {
  * @param {string} params.id - Identificador del libro.
  * @returns {Promise<Object|null>} Libro eliminado o null.
  */
-exports.deletebook = async function ({ id }) {
+exports.deletebook = function ({ id }) {
   return Libro.findByIdAndRemove(id);
 };

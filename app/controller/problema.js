@@ -103,6 +103,11 @@ class Problema {
     }
   }
 
+  /**
+   * Elimina un problema por ID.
+   * @param {import('express').Request} req - Objeto de solicitud de Express.
+   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   */
   async eliminarProblema(req, res) {
     try {
       const { id } = req.params;
