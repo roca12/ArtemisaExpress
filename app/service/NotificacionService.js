@@ -7,6 +7,7 @@ const { sha256 } = require("../util/crypto/hash");
 class NotificacionService {
   constructor(strategy) {
     this.strategy = strategy;
+    this.model = ModelNotificacion;
   }
   /**
    * Genera y envía un código de verificación al destino indicado.
@@ -18,7 +19,7 @@ class NotificacionService {
     const codigo = _generarCodigo();
     if (!destino) throw new Error("El destino es obligatorio");
     if (!usuario) throw new Error("La información del usuario es obligatoria");
-    const doc = await ModelNotificacion.createOne({
+    const doc = await this.model.createOne({
       destino,
       tipo: this.strategy.tipo,
       plantilla: "verificacion",
@@ -30,7 +31,7 @@ class NotificacionService {
       },
     });
     await this.strategy.send(destino, { usuario, codigo });
-    await ModelNotificacion.marcarEnviado(doc._id);
+    await this.model.marcarEnviado(doc._id);
     return {
       success: true,
       message: "Código enviado exitosamente",
@@ -47,7 +48,7 @@ class NotificacionService {
     if (!destino) throw new Error("El destino es obligatorio");
     if (!usuario) throw new Error("La información del usuario es obligatoria");
     const codigo = _generarCodigo();
-    await ModelNotificacion.updateOne(destino, "verificacion", {
+    await this.model.updateOne(destino, "verificacion", {
       usuario,
       codigo: sha256(codigo),
       expiraEn: new Date(Date.now() + 1000 * 60 * 5),
@@ -56,7 +57,7 @@ class NotificacionService {
     await this.strategy.send(destino, { usuario, codigo });
     return {
       success: true,
-      message: "Código enviado exitosamente",
+      message: "Código reenviado exitosamente",
     };
   }
 
@@ -68,7 +69,7 @@ class NotificacionService {
    */
   async validarCodigo(destino, codigo) {
     if (!destino) throw new Error("El destino es obligatorio");
-    const doc = await ModelNotificacion.findOne(destino, "verificacion");
+    const doc = await this.model.findOne(destino, "verificacion");
     if (!doc) return false;
     return (
       !doc.datos.usado &&
@@ -84,14 +85,14 @@ class NotificacionService {
    * @returns {Promise<void>}
    */
   async enviarAviso(destino, datos) {
-    const doc = await ModelNotificacion.createOne({
+    const doc = await this.model.createOne({
       destino,
       tipo: this.strategy.tipo,
       plantilla: "aviso",
       datos,
     });
     await this.strategy.send(destino, datos);
-    await ModelNotificacion.marcarEnviado(doc._id);
+    await this.model.marcarEnviado(doc._id);
   }
 }
 

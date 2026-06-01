@@ -6,6 +6,10 @@ const { hashPassword } = require("../util/crypto/hash");
  * Servicio para la gestión y autenticación de usuarios.
  */
 class UsuarioService {
+  constructor() {
+    this.model = ModelUsuario;
+  }
+
   /**
    * Crea un nuevo usuario hasheando su contraseña antes de persistirlo.
    * @param {Object} usuario - Datos del usuario a crear.
@@ -15,7 +19,7 @@ class UsuarioService {
     if (usuario?.contrasenia) {
       usuario.contrasenia = hashPassword(usuario.contrasenia);
     }
-    return ModelUsuario.crearUsuario(usuario);
+    return await this.model.crearUsuario(usuario);
   }
 
   /**
@@ -26,7 +30,7 @@ class UsuarioService {
    */
   async autenticarUsuario(usuario, contrasenia) {
     const password = hashPassword(contrasenia);
-    const [searchUser] = await ModelUsuario.findByCredentials(usuario, password);
+    const [searchUser] = await this.model.findByCredentials(usuario, password);
     return {
       token: jwt.sign(
         { usuario: searchUser.usuario, correo: searchUser.correo, rol: searchUser.rol },

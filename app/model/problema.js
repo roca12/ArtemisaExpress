@@ -5,8 +5,8 @@ const Problema = configMongoose.problema;
  * Obtiene todos los problemas de la base de datos.
  * @returns {Promise<{data: Array}>} Objeto con la lista de problemas.
  */
-exports.findAll = async function () {
-  return await Problema.findAll();
+exports.findAll = function () {
+  return Problema.findAll();
 };
 
 /**
@@ -14,8 +14,8 @@ exports.findAll = async function () {
  * @param {Object} data - Datos del problema.
  * @returns {Promise<Object>} Problema creado.
  */
-exports.crearProblema = async function (data) {
-  return await new Problema(data).save();
+exports.crearProblema = function (data) {
+  return new Problema(data).save();
 };
 
 /**
@@ -24,14 +24,14 @@ exports.crearProblema = async function (data) {
  * @param data los nuevos datos del problema
  * @returns {Promise<Object>} el problema actualizado.
  */
-exports.actualizarProblema = async function ({ id, data }) {
-  return await Problema.findOneAndUpdate({ _id: id }, data, { new: true });
+exports.actualizarProblema = function ({ id, data }) {
+  return Problema.findOneAndUpdate({ _id: id }, data, { new: true });
 };
 /**
  * Busca un problema a partir de su id y lo elimina
  * @param id el identificador único del problema
  * @returns {Promise<Object>} La confirmacin de eliminación.
  */
-exports.eliminarProblema = async function (id) {
-  return await Problema.findOneAndDelete({ _id: id });
+exports.eliminarProblema = function (id) {
+  return Problema.findOneAndDelete({ _id: id });
 };

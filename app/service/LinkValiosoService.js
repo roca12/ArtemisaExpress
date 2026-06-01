@@ -5,6 +5,10 @@ const urlValidator = require("../util/validators/url");
  * Servicio para la gestión de links valiosos.
  */
 class LinkValiosoService {
+  constructor() {
+    this.model = ModelLinkValioso;
+  }
+
   /**
    * Crea un nuevo link valioso.
    * @param {Object} datos - Datos del link.
@@ -20,15 +24,17 @@ class LinkValiosoService {
     if (!tags) throw new Error("Los tags es obligatorio");
     if (!icono) throw new Error("El icono es obligatorio");
     if (!urlValidator.esUrlValida(url)) throw new Error("El url no es válida");
-    return ModelLinkValioso.create({ nombre, url, tags, icono });
+    return await this.model.create({ nombre, url, tags, icono });
   }
+
   /**
    * Obtiene todos los links valiosos.
    * @returns {Promise<Array>} Lista de links valiosos.
    */
   async obtenerLinksValiosos() {
-    return ModelLinkValioso.findAll();
+    return await this.model.findAll();
   }
+
   /**
    * Actualiza un link valioso existente por ID.
    * @param {string} id - Identificador del link.
@@ -47,26 +53,15 @@ class LinkValiosoService {
       throw new Error("La URL no es válida");
     let datos = {};
     let flag = false;
-    if (nombre) {
-      datos.nombre = nombre;
-      flag = true;
-    }
-    if (url) {
-      datos.url = url;
-      flag = true;
-    }
-    if (tags) {
-      datos.tags = tags;
-      flag = true;
-    }
-    if (icono) {
-      datos.icono = icono;
-      flag = true;
-    }
+    if (nombre) { datos.nombre = nombre; flag = true; }
+    if (url) { datos.url = url; flag = true; }
+    if (tags) { datos.tags = tags; flag = true; }
+    if (icono) { datos.icono = icono; flag = true; }
     if (!flag)
       throw new Error("Es necesario que alguno de los campos no esté vacío");
-    return ModelLinkValioso.updateOne({ id, datos });
+    return await this.model.updateOne({ id, datos });
   }
+
   /**
    * Elimina un link valioso por ID.
    * @param {string} id - Identificador del link.
@@ -74,7 +69,7 @@ class LinkValiosoService {
    */
   async eliminarLinkValioso(id) {
     if (!id) throw new Error("El id es obligatorio");
-    return ModelLinkValioso.deleteOne(id);
+    return await this.model.deleteOne(id);
   }
 }
 module.exports = LinkValiosoService;

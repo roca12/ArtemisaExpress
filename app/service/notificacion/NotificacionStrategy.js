@@ -12,11 +12,11 @@ class NotificacionStrategy {
   }
   /**
    * Envía una notificación al destino indicado.
-   * @param {string} destino - Dirección de destino.
-   * @param {Object} datos - Datos a incluir en la notificación.
+   * @param {string} _destino - Dirección de destino.
+   * @param {Object} _datos - Datos a incluir en la notificación.
    * @returns {Promise<void>}
    */
-  async send(destino, datos) {
+  async send(_destino, _datos) {
     throw new Error(
       `${this.constructor.name} debe implementar 'send(destino,datos)'`,
     );

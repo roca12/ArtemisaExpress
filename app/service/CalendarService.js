@@ -44,7 +44,7 @@ class CalendarioService {
         }
       }
       return new CalendarioResponse(data);
-    } catch (e) {
+    } catch {
       throw new CalendarioApiException();
     }
   }

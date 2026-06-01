@@ -3,12 +3,16 @@ const ModelLibro = require("../model/libro");
  * Servicio para la gestión de libros.
  */
 class LibroService {
+
+  constructor(){
+    this.model = ModelLibro;
+  }
   /**
    * Obtiene todos los libros.
    * @returns {Promise<Array>} Lista de libros.
    */
   async obtenerLibros() {
-    return ModelLibro.findAll();
+    return await this.model.findAll();
   }
 
   /**
@@ -22,7 +26,7 @@ class LibroService {
   async crearLibro({ titulo, archivoPdf, imagen }) {
     if (!titulo) throw new Error("El título es obligatorio");
     if (!titulo) throw new Error("El archivo PDF es obligatorio");
-    return ModelLibro.createbook({ titulo, archivoPdf, imagen });
+    return await this.model.createbook({ titulo, archivoPdf, imagen });
   }
 
   /**
@@ -35,12 +39,12 @@ class LibroService {
    * @returns {Promise<Object>} Libro actualizado.
    */
   async actualizarLibro(id, { titulo, archivoPdf, imagen }) {
-    if (!id) throw new Error("El ido es obligatorio");
+    if (!id) throw new Error("El id es obligatorio");
     const datos = {};
     if (titulo) datos.titulo = titulo;
     if (archivoPdf) datos.archivoPdf = archivoPdf;
     if (imagen) datos.imagen = imagen;
-    return ModelLibro.updatebook({ id, datos });
+    return await this.model.updatebook({ id, datos });
   }
   /**
    * Elimina un libro por ID.
@@ -49,7 +53,7 @@ class LibroService {
    */
   async eliminarLibro(id) {
     if (!id) throw new Error("El id es obligatorio");
-    return ModelLibro.deletebook(id);
+    return await this.model.deletebook(id);
   }
 }
 module.exports = LibroService;

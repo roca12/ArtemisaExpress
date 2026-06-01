@@ -4,6 +4,9 @@ const ProblemaModel = require("../model/problema");
  * Servicio para la gestión de problemas de programación.
  */
 class ProblemaService {
+  constructor() {
+    this.model = ProblemaModel;
+  }
   /**
    * Crea un nuevo problema de programación.
    * @param {Object} datos - Datos del problema.
@@ -29,7 +32,7 @@ class ProblemaService {
     if (!juez) throw new Error("El juez es obligatorio");
     if (!dificultad) throw new Error("La dificultad es obligatoria");
     if (!url) throw new Error("El url es obligatorio");
-    return await ProblemaModel.crearProblema({
+    return await this.model.crearProblema({
       titulo,
       juez,
       alias,
@@ -65,7 +68,7 @@ class ProblemaService {
     if (url) datos.url = url;
     if (Object.keys(datos).length === 0)
       throw new Error("Debes enviar al menos un campo para actualizar");
-    return ProblemaModel.actualizarProblema({ id, data: datos });
+    return await this.model.actualizarProblema({ id, data: datos });
   }
 
   /**
@@ -73,7 +76,7 @@ class ProblemaService {
    * @returns {Promise<{data: Array}>} Objeto con la lista de problemas.
    */
   async obtenerProblemas() {
-    return ProblemaModel.findAll();
+    return await this.model.findAll();
   }
 
   /**
@@ -83,7 +86,7 @@ class ProblemaService {
    */
   async eliminarProblema(id) {
     if (!id) throw new Error("El id es obligatorio");
-    return ProblemaModel.eliminarProblema(id);
+    return await this.model.eliminarProblema(id);
   }
 }
 module.exports = ProblemaService;

@@ -5,8 +5,8 @@
  */
 function esUrlValida(url) {
   try {
-    const u = new URL(url);
-    return u.protocol === "http:" || u.protocol === "https:";
+    const urlObject = new URL(url);
+    return urlObject.protocol === "http:" || urlObject.protocol === "https:";
   } catch {
     return false;
   }
