@@ -84,14 +84,18 @@ const initRouter = () => {
   const emailStrategy = new EmailStrategy();
   const mfaService = new MFAService(emailStrategy);
   const controllers = [
-    "temario",
-    "problema",
-    "link_valioso",
-    "calendario",
-    "libro",
-    "notificacion",
+    ["temario"],
+    ["problema"],
+    ["link_valioso"],
+    ["calendario"],
+    ["libro"],
+    ["notificacion"],
+    ["usuario", mfaService],
   ];
-  controllers.forEach((name) => new (require(`./controller/${name}`))(router));
+
+  controllers.forEach(([name, ...args]) =>
+      new (require(`./controller/${name}`))(router, ...args)
+  );
   const UsuarioController = require("./controller/usuario");
   new UsuarioController(router, mfaService);
 };
