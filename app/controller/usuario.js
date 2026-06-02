@@ -274,8 +274,11 @@ class Usuario {
       );
       return res.status(200).json(resultado);
     } catch (error) {
-      if(error.message === "Correo no verificado"){
-        return res.status(403).json({ ok: false, message: "Debes verificar tu correo antes de iniciar sesión" });
+      if (error.message === "Correo no verificado") {
+        return res.status(403).json({
+          ok: false,
+          message: "Debes verificar tu correo antes de iniciar sesión",
+        });
       }
       console.error("Usuario o contraseña invalidos: ", error);
       return res.status(401).json({
@@ -320,13 +323,18 @@ class Usuario {
    *         description: Código inválido, expirado o campos faltantes
    */
   async verificarCorreo(req, res) {
-    const {correo, codigo} = req.body;
-    if(!correo || !codigo) return res.status(400).json({ ok: false, message: "Correo y código son requeridos" });
-    try{
+    const { correo, codigo } = req.body;
+    if (!correo || !codigo)
+      return res
+        .status(400)
+        .json({ ok: false, message: "Correo y código son requeridos" });
+    try {
       await this.service.verificarCorreo(correo, codigo);
-      return res.status(200).json({ok:true, message: "Correo verificado exitosamente." });
-    }catch(err){
-      return res.status(400).json({ok: false, message: err.message});
+      return res
+        .status(200)
+        .json({ ok: true, message: "Correo verificado exitosamente." });
+    } catch (err) {
+      return res.status(400).json({ ok: false, message: err.message });
     }
   }
 }

@@ -34,9 +34,9 @@ class UsuarioService {
    * @returns {Promise<Object>} Usuario actualizado con correo verificado.
    * @throws {Error} Si el código es inválido o ha expirado.
    */
-  async verificarCorreo(correo, codigo){
+  async verificarCorreo(correo, codigo) {
     const valido = await this.mfaService.validarCodigo(correo, codigo);
-    if(!valido) throw new Error("Código inválido o expirado.");
+    if (!valido) throw new Error("Código inválido o expirado.");
     return await this.model.verificarCorreo(correo);
   }
 
@@ -50,7 +50,7 @@ class UsuarioService {
     const password = hashPassword(contrasenia);
     const [searchUser] = await this.model.findByCredentials(usuario, password);
     if (!searchUser) throw new Error("Usuario o contraseña inválidos");
-    if(!searchUser.verificado) throw new Error("Correo no verificado");
+    if (!searchUser.verificado) throw new Error("Correo no verificado");
     return {
       token: jwt.sign(
         {
