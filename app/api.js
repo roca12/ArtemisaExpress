@@ -51,9 +51,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-/**
- * Inicializa y registra todos los controladores de rutas en el router de Express.
- */
 const swaggerSpec = swaggerJsdoc({
   definition: {
     openapi: "3.0.0",
@@ -74,6 +71,9 @@ const swaggerSpec = swaggerJsdoc({
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/.netlify/functions/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+/**
+ * Inicializa y registra todos los controladores de rutas en el router de Express.
+ */
 const initRouter = () => {
   const controllers = [
     "temario",

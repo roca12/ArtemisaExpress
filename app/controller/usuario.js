@@ -80,17 +80,17 @@ class Usuario {
     }
     try {
       const resultado = await this.service.crearUsuario(request.toModel());
-      res.status(200).json(new UsuarioResponse(resultado));
+      return res.status(200).json(new UsuarioResponse(resultado));
     } catch (error) {
       if (error.code === 11000) {
         console.error("Nombre de usuario o correo ya están en uso");
-        res.status(409).json({
+        return res.status(409).json({
           ok: false,
           message: "Nombre de usuario o correo ya están en uso",
         });
       } else {
         console.error("Error registrando al usuario: ", error);
-        res.status(500).json({
+        return res.status(500).json({
           ok: false,
           message: "Error registrando al usuario.",
           error: error.message,
@@ -175,9 +175,9 @@ class Usuario {
         request.nombreDeUsuario,
         request.correo,
       );
-      res.status(200).json(resultado);
+      return res.status(200).json(resultado);
     } catch (error) {
-      res.status(400).json({ ok: false, message: error.message });
+      return res.status(400).json({ ok: false, message: error.message });
     }
   }
 
@@ -217,9 +217,9 @@ class Usuario {
         request.nombreDeUsuario,
         request.nuevaContrasenia,
       );
-      res.status(200).json(resultado);
+      return res.status(200).json(resultado);
     } catch (error) {
-      res.status(400).json({ ok: false, message: error.message });
+      return res.status(400).json({ ok: false, message: error.message });
     }
   }
 
@@ -269,10 +269,10 @@ class Usuario {
         request.usuario,
         request.contrasenia,
       );
-      res.status(200).json(resultado);
+      return res.status(200).json(resultado);
     } catch (error) {
       console.error("Usuario o contraseña invalidos: ", error);
-      res.status(401).json({
+      return res.status(401).json({
         ok: false,
         message: "Usuario o contraseña invalidos.",
       });

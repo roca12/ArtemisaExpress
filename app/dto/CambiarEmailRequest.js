@@ -1,9 +1,16 @@
+/**
+ * DTO para la solicitud de cambio de correo electrónico.
+ */
 class CambiarEmailRequest {
   constructor(body) {
     this.nombreDeUsuario = body.nombreDeUsuario;
     this.correo = body.correo;
   }
 
+  /**
+   * Valida los campos del DTO.
+   * @returns {string[]} Lista de mensajes de error.
+   */
   validate() {
     const errors = [];
     if (!this.nombreDeUsuario) errors.push("El nombre de usuario es requerido.");
