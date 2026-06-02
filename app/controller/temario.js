@@ -11,9 +11,28 @@ class Temario {
   }
 
   /**
-   * Obtiene todos los temarios.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /temario:
+   *   get:
+   *     tags: [Temario]
+   *     summary: Obtiene todos los temas del temario
+   *     responses:
+   *       200:
+   *         description: Lista de temas
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   supergrupo: { type: string, example: Estructuras de Datos }
+   *                   tema: { type: string, example: Arreglos }
+   *                   texto: { type: string }
+   *                   complejidad_tiempo: { type: string, example: O(n) }
+   *                   orden: { type: number }
+   *       500:
+   *         description: Error interno del servidor
    */
   async obtenerTemario(req, res) {
     try {
@@ -27,9 +46,23 @@ class Temario {
   }
 
   /**
-   * Obtiene todos los supergrupos del temario.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /temario/supergrupos:
+   *   get:
+   *     tags: [Temario]
+   *     summary: Obtiene la lista de supergrupos del temario
+   *     responses:
+   *       200:
+   *         description: Lista de supergrupos
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: string
+   *               example: [Estructuras de Datos, Grafos, Programación Dinámica]
+   *       500:
+   *         description: Error interno del servidor
    */
   async obtenerSupergrupos(req, res) {
     try {

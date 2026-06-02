@@ -18,14 +18,27 @@ class LibroController {
   }
 
   /**
-   * Retrieves all books.
-   * @param {import('express').Request} req - Express request object.
-   * @param {import('express').Response} res - Express response object.
-   */
-  /**
-   * Obtiene todos los libros.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /libro/:
+   *   get:
+   *     tags: [Libro]
+   *     summary: Obtiene todos los libros
+   *     responses:
+   *       200:
+   *         description: Lista de libros
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   _id: { type: string }
+   *                   titulo: { type: string, example: Introducción a los Algoritmos }
+   *                   archivoPdf: { type: string, example: https://res.cloudinary.com/... }
+   *                   imagen: { type: string, example: https://res.cloudinary.com/... }
+   *       500:
+   *         description: Error interno del servidor
    */
   async obtenerLibros(req, res) {
     try {
@@ -39,9 +52,27 @@ class LibroController {
   }
 
   /**
-   * Crea un nuevo libro.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /libro/crear:
+   *   post:
+   *     tags: [Libro]
+   *     summary: Crea un nuevo libro
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [titulo]
+   *             properties:
+   *               titulo: { type: string, example: Introducción a los Algoritmos }
+   *               archivoPdf: { type: string, example: https://url-del-pdf.com/archivo.pdf }
+   *               imagen: { type: string, example: https://url-de-imagen.com/portada.jpg }
+   *     responses:
+   *       200:
+   *         description: Libro creado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async crearLibro(req, res) {
     try {
@@ -60,9 +91,31 @@ class LibroController {
   }
 
   /**
-   * Actualiza un libro existente por ID.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /libro/{id}:
+   *   put:
+   *     tags: [Libro]
+   *     summary: Actualiza un libro (sube archivos a Cloudinary)
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del libro a actualizar
+   *     requestBody:
+   *       content:
+   *         multipart/form-data:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               titulo: { type: string }
+   *               archivoPdf: { type: string, format: binary }
+   *               imagen: { type: string, format: binary }
+   *     responses:
+   *       200:
+   *         description: Libro actualizado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async actualizarLibro(req, res) {
     try {
@@ -84,9 +137,22 @@ class LibroController {
   }
 
   /**
-   * Elimina un libro por ID.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /libro/{id}:
+   *   delete:
+   *     tags: [Libro]
+   *     summary: Elimina un libro por ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del libro a eliminar
+   *     responses:
+   *       200:
+   *         description: Libro eliminado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async eliminarLibro(req, res) {
     try {

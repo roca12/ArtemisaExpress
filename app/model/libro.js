@@ -18,7 +18,7 @@ exports.findAll = function () {
  * @returns {Promise<Object>} Instancia del libro creado.
  */
 exports.createbook = function ({ titulo, archivoPdf, imagen }) {
-  return new Libro({ titulo, archivoPdf, imagen });
+  return new Libro({ titulo, archivoPdf, imagen }).save();
 };
 
 /**

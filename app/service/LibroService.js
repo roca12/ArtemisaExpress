@@ -24,7 +24,7 @@ class LibroService {
    */
   async crearLibro({ titulo, archivoPdf, imagen }) {
     if (!titulo) throw new Error("El título es obligatorio");
-    if (!titulo) throw new Error("El archivo PDF es obligatorio");
+    if (!archivoPdf) throw new Error("El archivo PDF es obligatorio");
     return await this.model.createbook({ titulo, archivoPdf, imagen });
   }
 
@@ -52,7 +52,7 @@ class LibroService {
    */
   async eliminarLibro(id) {
     if (!id) throw new Error("El id es obligatorio");
-    return await this.model.deletebook(id);
+    return await this.model.deletebook({id});
   }
 }
 module.exports = LibroService;

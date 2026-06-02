@@ -13,9 +13,28 @@ class LinkValiosoController {
   }
 
   /**
-   * Obtiene todos los links valiosos.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /link-valioso/:
+   *   get:
+   *     tags: [Link Valioso]
+   *     summary: Obtiene todos los links valiosos
+   *     responses:
+   *       200:
+   *         description: Lista de links valiosos
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   _id: { type: string }
+   *                   nombre: { type: string, example: VisuAlgo }
+   *                   url: { type: string, example: https://visualgo.net }
+   *                   tags: { type: string, example: algoritmos,visualización }
+   *                   icono: { type: string, example: chart-bar }
+   *       500:
+   *         description: Error interno del servidor
    */
   async obtenerLinksValiosos(req, res) {
     try {
@@ -28,9 +47,28 @@ class LinkValiosoController {
     }
   }
   /**
-   * Crea un nuevo link valioso.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /link-valioso/crear:
+   *   post:
+   *     tags: [Link Valioso]
+   *     summary: Crea un nuevo link valioso
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [nombre, url, tags, icono]
+   *             properties:
+   *               nombre: { type: string, example: VisuAlgo }
+   *               url: { type: string, example: https://visualgo.net }
+   *               tags: { type: string, example: algoritmos,visualización }
+   *               icono: { type: string, example: chart-bar }
+   *     responses:
+   *       201:
+   *         description: Link creado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async crearLinkValioso(req, res) {
     try {
@@ -49,9 +87,34 @@ class LinkValiosoController {
     }
   }
   /**
-   * Actualiza un link valioso existente por ID.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /link-valioso/{id}:
+   *   put:
+   *     tags: [Link Valioso]
+   *     summary: Actualiza un link valioso existente
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del link a actualizar
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [nombre, icono]
+   *             properties:
+   *               nombre: { type: string }
+   *               url: { type: string }
+   *               tags: { type: string }
+   *               icono: { type: string }
+   *     responses:
+   *       200:
+   *         description: Link actualizado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async actualizarLinkValioso(req, res) {
     try {
@@ -71,9 +134,22 @@ class LinkValiosoController {
     }
   }
   /**
-   * Elimina un link valioso por ID.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /link-valioso/{id}:
+   *   delete:
+   *     tags: [Link Valioso]
+   *     summary: Elimina un link valioso por ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del link a eliminar
+   *     responses:
+   *       200:
+   *         description: Link eliminado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async eliminarLinkValioso(req, res) {
     try {

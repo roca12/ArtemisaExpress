@@ -1,6 +1,5 @@
 const { configMongoose } = require("../database/database");
 const Usuario = configMongoose.usuario;
-const RutaComponents = configMongoose.ruta_component;
 
 /**
  * Guarda un nuevo usuario en la base de datos.
@@ -11,14 +10,6 @@ exports.crearUsuario = function (usuario) {
   return new Usuario(usuario).save();
 };
 
-/**
- * Busca un usuario por nombre de usuario.
- * @param {string} usuario - Nombre de usuario a buscar.
- * @returns {Promise<Array>} Lista de usuarios encontrados.
- */
-exports.obtenerUsuario = function (usuario) {
-  return Usuario.find({ usuario });
-};
 
 /**
  * Busca un usuario por nombre de usuario y contraseña hasheada.
@@ -31,10 +22,32 @@ exports.findByCredentials = function (usuario, contrasenia) {
 };
 
 /**
- * Obtiene las rutas y componentes accesibles para un perfil de usuario.
- * @param {string} perfil - Nombre del perfil (rol).
- * @returns {Promise<Array>} Lista de rutas y componentes del perfil.
+ * Actualiza los datos de un usuario por ID.
+ * @param {Object} params - Parámetros de actualización.
+ * @param {string} params.id - Identificador del usuario.
+ * @param {Object} params.data - Campos a actualizar.
+ * @returns {Promise<Object|null>} Usuario actualizado o null si no existe.
  */
-exports.obtenerAccesosPorPerfil = function (perfil) {
-  return RutaComponents.find({ perfil });
+exports.actualizarUsuario = function ({id, data}) {
+  return Usuario.findOneAndUpdate({_id:id}, data, {new: true});
 };
+
+/**
+ * Busca un usuario por correo electrónico.
+ * @param {string} correo - Correo electrónico único del usuario.
+ * @returns {Promise<Object|null>} Usuario encontrado o null si no existe.
+ */
+exports.buscarPorCorreo = function (correo) {
+  return Usuario.findOne({ correo });
+};
+
+/**
+ * Busca un usuario por nombre de usuario.
+ * @param {string} usuario - Nombre de usuario único.
+ * @returns {Promise<Object|null>} Usuario encontrado o null si no existe.
+ */
+exports.buscarPorUsuario = function (usuario) {
+  return Usuario.findOne({ usuario });
+};
+
+
