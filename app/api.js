@@ -69,7 +69,11 @@ const swaggerSpec = swaggerJsdoc({
   apis: ["./app/controller/*.js"],
 });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/.netlify/functions/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/.netlify/functions/api/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec),
+);
 
 /**
  * Inicializa y registra todos los controladores de rutas en el router de Express.

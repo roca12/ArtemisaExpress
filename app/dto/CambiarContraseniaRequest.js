@@ -13,8 +13,10 @@ class CambiarContraseniaRequest {
    */
   validate() {
     const errors = [];
-    if (!this.nombreDeUsuario) errors.push("El nombre de usuario es requerido.");
-    if (!this.nuevaContrasenia) errors.push("La nueva contraseña es requerida.");
+    if (!this.nombreDeUsuario)
+      errors.push("El nombre de usuario es requerido.");
+    if (!this.nuevaContrasenia)
+      errors.push("La nueva contraseña es requerida.");
     return errors;
   }
 }

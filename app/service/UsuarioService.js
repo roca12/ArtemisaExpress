@@ -74,29 +74,41 @@ class UsuarioService {
     if (!correo) throw new Error("El correo es obligatorio.");
     if (!nombreDeUsuario) throw new Error("El nombre de obligatorio.");
     const checkUsuario = await this.model.buscarPorUsuario(nombreDeUsuario);
-    if(checkUsuario) throw new Error("Este nombre de usuario ya está en uso.");
+    if (checkUsuario) throw new Error("Este nombre de usuario ya está en uso.");
     const oldUsuario = await this.model.buscarPorCorreo(correo);
     if (!oldUsuario) throw new Error("No hay usuario con este correo.");
     oldUsuario.usuario = nombreDeUsuario;
-    return await this.model.actualizarUsuario({id:oldUsuario.id, data:oldUsuario});
+    return await this.model.actualizarUsuario({
+      id: oldUsuario.id,
+      data: oldUsuario,
+    });
   }
   async cambiarEmailDeUsuario(nombreDeUsuario, correo) {
-    if (!nombreDeUsuario) throw new Error("El nombre de usuario es obligatorio.");
+    if (!nombreDeUsuario)
+      throw new Error("El nombre de usuario es obligatorio.");
     if (!correo) throw new Error("El correo es obligatorio.");
     const checkCorreo = await this.model.buscarPorCorreo(correo);
     if (checkCorreo) throw new Error("Este correo ya está en uso.");
     const usuario = await this.model.buscarPorUsuario(nombreDeUsuario);
     if (!usuario) throw new Error("No hay usuario con este nombre de usuario.");
     usuario.correo = correo;
-    return await this.model.actualizarUsuario({ id: usuario.id, data: usuario });
+    return await this.model.actualizarUsuario({
+      id: usuario.id,
+      data: usuario,
+    });
   }
   async cambiarContrasenia(nombreDeUsuario, nuevaContrasenia) {
-    if (!nombreDeUsuario) throw new Error("El nombre de usuario es obligatorio.");
-    if (!nuevaContrasenia) throw new Error("La nueva contraseña es obligatoria.");
+    if (!nombreDeUsuario)
+      throw new Error("El nombre de usuario es obligatorio.");
+    if (!nuevaContrasenia)
+      throw new Error("La nueva contraseña es obligatoria.");
     const usuario = await this.model.buscarPorUsuario(nombreDeUsuario);
     if (!usuario) throw new Error("No hay usuario con este nombre de usuario.");
     usuario.contrasenia = hashPassword(nuevaContrasenia);
-    return await this.model.actualizarUsuario({ id: usuario.id, data: usuario });
+    return await this.model.actualizarUsuario({
+      id: usuario.id,
+      data: usuario,
+    });
   }
 }
 

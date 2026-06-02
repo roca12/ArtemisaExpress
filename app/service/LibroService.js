@@ -52,7 +52,7 @@ class LibroService {
    */
   async eliminarLibro(id) {
     if (!id) throw new Error("El id es obligatorio");
-    return await this.model.deletebook({id});
+    return await this.model.deletebook({ id });
   }
 }
 module.exports = LibroService;

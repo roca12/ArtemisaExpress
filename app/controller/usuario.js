@@ -75,8 +75,8 @@ class Usuario {
   async crearUsuario(req, res) {
     const request = new RegisterRequest(req.body);
     const errors = request.validate();
-    if(errors.length > 0) {
-      return res.status(400).json({ok:false, errors});
+    if (errors.length > 0) {
+      return res.status(400).json({ ok: false, errors });
     }
     try {
       const resultado = await this.service.crearUsuario(request.toModel());
@@ -169,7 +169,7 @@ class Usuario {
   async cambiarEmailDeUsuario(req, res) {
     const request = new CambiarEmailRequest(req.body);
     const errors = request.validate();
-    if(errors.length > 0) return res.status(400).json({ok:false, errors});
+    if (errors.length > 0) return res.status(400).json({ ok: false, errors });
     try {
       const resultado = await this.service.cambiarEmailDeUsuario(
         request.nombreDeUsuario,
@@ -211,7 +211,7 @@ class Usuario {
   async cambiarContrasenia(req, res) {
     const request = new CambiarContraseniaRequest(req.body);
     const errors = request.validate();
-    if(errors.length > 0) return res.status(400).json({ok:false, errors});
+    if (errors.length > 0) return res.status(400).json({ ok: false, errors });
     try {
       const resultado = await this.service.cambiarContrasenia(
         request.nombreDeUsuario,
