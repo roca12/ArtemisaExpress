@@ -1,7 +1,6 @@
 const ModelUsuario = require("../model/usuario");
 const jwt = require("jsonwebtoken");
 const { hashPassword } = require("../util/crypto/hash");
-const UsuarioResponse = require("../dto/UsuarioResponse");
 
 /**
  * Servicio para la gestión y autenticación de usuarios.
@@ -70,6 +69,12 @@ class UsuarioService {
     }
   }
 
+  /**
+   * Cambia el nombre de usuario de una cuenta identificada por correo.
+   * @param {string} correo - Correo electrónico del usuario.
+   * @param {string} nombreDeUsuario - Nuevo nombre de usuario.
+   * @returns {Promise<Object>} Usuario actualizado.
+   */
   async cambiarNombreDeUsuario(correo, nombreDeUsuario) {
     if (!correo) throw new Error("El correo es obligatorio.");
     if (!nombreDeUsuario) throw new Error("El nombre de obligatorio.");
@@ -83,6 +88,12 @@ class UsuarioService {
       data: oldUsuario,
     });
   }
+  /**
+   * Cambia el correo electrónico de un usuario.
+   * @param {string} nombreDeUsuario - Nombre del usuario.
+   * @param {string} correo - Nuevo correo electrónico.
+   * @returns {Promise<Object>} Usuario actualizado.
+   */
   async cambiarEmailDeUsuario(nombreDeUsuario, correo) {
     if (!nombreDeUsuario)
       throw new Error("El nombre de usuario es obligatorio.");
@@ -97,6 +108,12 @@ class UsuarioService {
       data: usuario,
     });
   }
+  /**
+   * Cambia la contraseña de un usuario hasheando el nuevo valor antes de persistirlo.
+   * @param {string} nombreDeUsuario - Nombre del usuario.
+   * @param {string} nuevaContrasenia - Nueva contraseña en texto plano.
+   * @returns {Promise<Object>} Usuario actualizado.
+   */
   async cambiarContrasenia(nombreDeUsuario, nuevaContrasenia) {
     if (!nombreDeUsuario)
       throw new Error("El nombre de usuario es obligatorio.");

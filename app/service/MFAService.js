@@ -77,6 +77,10 @@ class MFAService {
   }
 }
 
+/**
+ * Genera un código de verificación aleatorio de 4 caracteres alfanuméricos.
+ * @returns {string} Código generado.
+ */
 function _generarCodigo() {
   const chars = [];
   for (let i = 0; i < 4; i++) {
