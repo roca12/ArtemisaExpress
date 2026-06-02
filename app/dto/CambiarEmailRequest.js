@@ -6,7 +6,8 @@ class CambiarEmailRequest {
 
   validate() {
     const errors = [];
-    if (!this.nombreDeUsuario) errors.push("El nombre de usuario es requerido.");
+    if (!this.nombreDeUsuario)
+      errors.push("El nombre de usuario es requerido.");
     if (!this.correo) errors.push("El correo es requerido.");
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (this.correo && !emailRegex.test(this.correo))

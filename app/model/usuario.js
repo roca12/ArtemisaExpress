@@ -10,7 +10,6 @@ exports.crearUsuario = function (usuario) {
   return new Usuario(usuario).save();
 };
 
-
 /**
  * Busca un usuario por nombre de usuario y contraseña hasheada.
  * @param {string} usuario - Nombre de usuario.
@@ -28,8 +27,8 @@ exports.findByCredentials = function (usuario, contrasenia) {
  * @param {Object} params.data - Campos a actualizar.
  * @returns {Promise<Object|null>} Usuario actualizado o null si no existe.
  */
-exports.actualizarUsuario = function ({id, data}) {
-  return Usuario.findOneAndUpdate({_id:id}, data, {new: true});
+exports.actualizarUsuario = function ({ id, data }) {
+  return Usuario.findOneAndUpdate({ _id: id }, data, { new: true });
 };
 
 /**
@@ -49,5 +48,3 @@ exports.buscarPorCorreo = function (correo) {
 exports.buscarPorUsuario = function (usuario) {
   return Usuario.findOne({ usuario });
 };
-
-

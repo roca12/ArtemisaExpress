@@ -17,7 +17,9 @@ exports.createOne = function (data) {
  * @returns {Promise<Object|null>} Notificación encontrada o null.
  */
 exports.findOne = function (destino, plantilla) {
-  return Notificacion.findOne({ destino, plantilla }, null, { sort: { creadoEn: -1 } });
+  return Notificacion.findOne({ destino, plantilla }, null, {
+    sort: { creadoEn: -1 },
+  });
 };
 
 /**
@@ -26,7 +28,11 @@ exports.findOne = function (destino, plantilla) {
  * @returns {Promise<Object|null>} Documento actualizado o null.
  */
 exports.marcarUsado = function (id) {
-  return Notificacion.findByIdAndUpdate(id, { "datos.usado": true }, { new: true });
+  return Notificacion.findByIdAndUpdate(
+    id,
+    { "datos.usado": true },
+    { new: true },
+  );
 };
 
 /**

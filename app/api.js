@@ -72,7 +72,11 @@ const swaggerSpec = swaggerJsdoc({
   apis: ["./app/controller/*.js"],
 });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/.netlify/functions/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/.netlify/functions/api/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec),
+);
 
 const initRouter = () => {
   const controllers = [
