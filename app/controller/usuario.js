@@ -9,8 +9,8 @@ const UsuarioResponse = require("../dto/UsuarioResponse");
  * Controlador para las rutas relacionadas con los usuarios.
  */
 class Usuario {
-  constructor(router) {
-    this.service = new UsuarioService();
+  constructor(router, mfaService) {
+    this.service = new UsuarioService(mfaService);
     router.post("/usuario/crear", this.crearUsuario.bind(this));
     router.post("/usuario/autenticar", this.autenticarUsuario.bind(this));
     router.post(
@@ -25,6 +25,7 @@ class Usuario {
       "/usuario/cambiar-contrasenia",
       this.cambiarContrasenia.bind(this),
     );
+    router.post("/usuario/verificar-correo", this.verificarCorreo.bind(this));
   }
 
   /**
@@ -259,6 +260,8 @@ class Usuario {
    *         description: Campos requeridos faltantes
    *       401:
    *         description: Usuario o contraseña inválidos
+   *       403:
+   *         description: Correo electrónico no verificado
    */
   async autenticarUsuario(req, res) {
     const request = new LoginRequest(req.body);
@@ -271,11 +274,59 @@ class Usuario {
       );
       return res.status(200).json(resultado);
     } catch (error) {
+      if(error.message === "Correo no verificado"){
+        return res.status(403).json({ ok: false, message: "Debes verificar tu correo antes de iniciar sesión" });
+      }
       console.error("Usuario o contraseña invalidos: ", error);
       return res.status(401).json({
         ok: false,
         message: "Usuario o contraseña invalidos.",
       });
+    }
+  }
+
+  /**
+   * @openapi
+   * /usuario/verificar-correo:
+   *   post:
+   *     tags: [Usuario]
+   *     summary: Verifica el correo electrónico de un usuario con el código recibido
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [correo, codigo]
+   *             properties:
+   *               correo:
+   *                 type: string
+   *                 format: email
+   *                 example: juan@ejemplo.com
+   *               codigo:
+   *                 type: string
+   *                 example: A3K7
+   *     responses:
+   *       200:
+   *         description: Correo verificado exitosamente
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 ok: { type: boolean, example: true }
+   *                 message: { type: string, example: Correo verificado exitosamente. }
+   *       400:
+   *         description: Código inválido, expirado o campos faltantes
+   */
+  async verificarCorreo(req, res) {
+    const {correo, codigo} = req.body;
+    if(!correo || !codigo) return res.status(400).json({ ok: false, message: "Correo y código son requeridos" });
+    try{
+      await this.service.verificarCorreo(correo, codigo);
+      return res.status(200).json({ok:true, message: "Correo verificado exitosamente." });
+    }catch(err){
+      return res.status(400).json({ok: false, message: err.message});
     }
   }
 }

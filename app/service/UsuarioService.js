@@ -6,8 +6,9 @@ const { hashPassword } = require("../util/crypto/hash");
  * Servicio para la gestión y autenticación de usuarios.
  */
 class UsuarioService {
-  constructor() {
+  constructor(mfaService) {
     this.model = ModelUsuario;
+    this.mfaService = mfaService;
     this.captchaSecret = process.env.CAPTCHA_SECRET;
     this.captchaUrl = "https://www.google.com/recaptcha/api/siteverify";
   }
@@ -21,7 +22,22 @@ class UsuarioService {
     if (usuario?.contrasenia) {
       usuario.contrasenia = hashPassword(usuario.contrasenia);
     }
-    return await this.model.crearUsuario(usuario);
+    const creado = await this.model.crearUsuario(usuario);
+    await this.mfaService.enviarCodigo(creado.correo, creado.usuario);
+    return creado;
+  }
+
+  /**
+   * Verifica el correo de un usuario validando el código MFA recibido.
+   * @param {string} correo - Correo electrónico del usuario.
+   * @param {string} codigo - Código de verificación recibido por correo.
+   * @returns {Promise<Object>} Usuario actualizado con correo verificado.
+   * @throws {Error} Si el código es inválido o ha expirado.
+   */
+  async verificarCorreo(correo, codigo){
+    const valido = await this.mfaService.validarCodigo(correo, codigo);
+    if(!valido) throw new Error("Código inválido o expirado.");
+    return await this.model.verificarCorreo(correo);
   }
 
   /**
@@ -34,6 +50,7 @@ class UsuarioService {
     const password = hashPassword(contrasenia);
     const [searchUser] = await this.model.findByCredentials(usuario, password);
     if (!searchUser) throw new Error("Usuario o contraseña inválidos");
+    if(!searchUser.verificado) throw new Error("Correo no verificado");
     return {
       token: jwt.sign(
         {
