@@ -8,6 +8,8 @@ const { hashPassword } = require("../util/crypto/hash");
 class UsuarioService {
   constructor() {
     this.model = ModelUsuario;
+    this.captchaSecret = process.env.CAPTCHA_SECRET;
+    this.captchaUrl = "https://www.google.com/recaptcha/api/siteverify";
   }
 
   /**
@@ -31,6 +33,7 @@ class UsuarioService {
   async autenticarUsuario(usuario, contrasenia) {
     const password = hashPassword(contrasenia);
     const [searchUser] = await this.model.findByCredentials(usuario, password);
+    if (!searchUser) throw new Error("Usuario o contraseña inválidos");
     return {
       token: jwt.sign(
         {
@@ -64,6 +67,65 @@ class UsuarioService {
       console.error("Error al verificar captcha: ", err);
       return false;
     }
+  }
+
+  /**
+   * Cambia el nombre de usuario de una cuenta identificada por correo.
+   * @param {string} correo - Correo electrónico del usuario.
+   * @param {string} nombreDeUsuario - Nuevo nombre de usuario.
+   * @returns {Promise<Object>} Usuario actualizado.
+   */
+  async cambiarNombreDeUsuario(correo, nombreDeUsuario) {
+    if (!correo) throw new Error("El correo es obligatorio.");
+    if (!nombreDeUsuario) throw new Error("El nombre de obligatorio.");
+    const checkUsuario = await this.model.buscarPorUsuario(nombreDeUsuario);
+    if (checkUsuario) throw new Error("Este nombre de usuario ya está en uso.");
+    const oldUsuario = await this.model.buscarPorCorreo(correo);
+    if (!oldUsuario) throw new Error("No hay usuario con este correo.");
+    oldUsuario.usuario = nombreDeUsuario;
+    return await this.model.actualizarUsuario({
+      id: oldUsuario.id,
+      data: oldUsuario,
+    });
+  }
+  /**
+   * Cambia el correo electrónico de un usuario.
+   * @param {string} nombreDeUsuario - Nombre del usuario.
+   * @param {string} correo - Nuevo correo electrónico.
+   * @returns {Promise<Object>} Usuario actualizado.
+   */
+  async cambiarEmailDeUsuario(nombreDeUsuario, correo) {
+    if (!nombreDeUsuario)
+      throw new Error("El nombre de usuario es obligatorio.");
+    if (!correo) throw new Error("El correo es obligatorio.");
+    const checkCorreo = await this.model.buscarPorCorreo(correo);
+    if (checkCorreo) throw new Error("Este correo ya está en uso.");
+    const usuario = await this.model.buscarPorUsuario(nombreDeUsuario);
+    if (!usuario) throw new Error("No hay usuario con este nombre de usuario.");
+    usuario.correo = correo;
+    return await this.model.actualizarUsuario({
+      id: usuario.id,
+      data: usuario,
+    });
+  }
+  /**
+   * Cambia la contraseña de un usuario hasheando el nuevo valor antes de persistirlo.
+   * @param {string} nombreDeUsuario - Nombre del usuario.
+   * @param {string} nuevaContrasenia - Nueva contraseña en texto plano.
+   * @returns {Promise<Object>} Usuario actualizado.
+   */
+  async cambiarContrasenia(nombreDeUsuario, nuevaContrasenia) {
+    if (!nombreDeUsuario)
+      throw new Error("El nombre de usuario es obligatorio.");
+    if (!nuevaContrasenia)
+      throw new Error("La nueva contraseña es obligatoria.");
+    const usuario = await this.model.buscarPorUsuario(nombreDeUsuario);
+    if (!usuario) throw new Error("No hay usuario con este nombre de usuario.");
+    usuario.contrasenia = hashPassword(nuevaContrasenia);
+    return await this.model.actualizarUsuario({
+      id: usuario.id,
+      data: usuario,
+    });
   }
 }
 

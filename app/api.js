@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const logger = require("morgan");
 const cors = require("cors");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 dotenv.config();
 
@@ -49,6 +51,30 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+const swaggerSpec = swaggerJsdoc({
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "ArtemisaExpress API",
+      version: "1.0.0",
+      description: "API de la plataforma de aprendizaje Artemisa Express",
+    },
+    servers: [
+      {
+        url: "http://localhost:9000/.netlify/functions/api",
+        description: "Local (netlify-lambda)",
+      },
+    ],
+  },
+  apis: ["./app/controller/*.js"],
+});
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/.netlify/functions/api/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec),
+);
+
 /**
  * Inicializa y registra todos los controladores de rutas en el router de Express.
  */

@@ -13,9 +13,29 @@ class Problema {
   }
 
   /**
-   * Obtiene todos los problemas.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /problema/:
+   *   get:
+   *     tags: [Problema]
+   *     summary: Obtiene todos los problemas de programación
+   *     responses:
+   *       200:
+   *         description: Lista de problemas
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   _id: { type: string }
+   *                   titulo: { type: string, example: Two Sum }
+   *                   juez: { type: string, example: LeetCode }
+   *                   alias: { type: number, example: 1 }
+   *                   dificultad: { type: number, example: 1 }
+   *                   url: { type: string, example: https://leetcode.com/problems/two-sum }
+   *       500:
+   *         description: Error interno del servidor
    */
   async obtenerProblemas(req, res) {
     try {
@@ -29,9 +49,33 @@ class Problema {
   }
 
   /**
-   * Crea un nuevo problema.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /problema/crear:
+   *   post:
+   *     tags: [Problema]
+   *     summary: Crea un nuevo problema de programación
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [titulo, juez, dificultad, url]
+   *             properties:
+   *               titulo: { type: string, example: Two Sum }
+   *               juez: { type: string, example: LeetCode }
+   *               alias: { type: number, example: 1 }
+   *               dificultad: { type: number, example: 1 }
+   *               tema_1: { type: string, example: Arrays }
+   *               tema_2: { type: string, example: Hash Table }
+   *               tema_3: { type: string }
+   *               tema_4: { type: string }
+   *               url: { type: string, example: https://leetcode.com/problems/two-sum }
+   *     responses:
+   *       200:
+   *         description: Problema creado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async crearProblema(req, res) {
     try {
@@ -66,13 +110,41 @@ class Problema {
   }
 
   /**
-   * Actualiza un problema ya existente.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /problema/{id}:
+   *   put:
+   *     tags: [Problema]
+   *     summary: Actualiza un problema existente
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del problema a actualizar
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               titulo: { type: string }
+   *               juez: { type: string }
+   *               alias: { type: number }
+   *               dificultad: { type: number }
+   *               tema_1: { type: string }
+   *               tema_2: { type: string }
+   *               tema_3: { type: string }
+   *               tema_4: { type: string }
+   *               url: { type: string }
+   *     responses:
+   *       200:
+   *         description: Problema actualizado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async actualizarProblema(req, res) {
     try {
-      const { id } = req.params.id;
+      const { id } = req.params;
       const {
         titulo,
         juez,
@@ -104,9 +176,22 @@ class Problema {
   }
 
   /**
-   * Elimina un problema por ID.
-   * @param {import('express').Request} req - Objeto de solicitud de Express.
-   * @param {import('express').Response} res - Objeto de respuesta de Express.
+   * @openapi
+   * /problema/{id}:
+   *   delete:
+   *     tags: [Problema]
+   *     summary: Elimina un problema por ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del problema a eliminar
+   *     responses:
+   *       200:
+   *         description: Problema eliminado exitosamente
+   *       500:
+   *         description: Error interno del servidor
    */
   async eliminarProblema(req, res) {
     try {

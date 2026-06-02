@@ -1,7 +1,7 @@
 /**
  * DTO para la solicitud de registro de un nuevo usuario.
  */
-export class RegisterRequest {
+class RegisterRequest {
   constructor(body) {
     this.usuario = body.usuario;
     this.correo = body.correo;
@@ -32,7 +32,8 @@ export class RegisterRequest {
       rol: "estudiante",
       usuario: this.usuario,
       correo: this.correo,
-      verification: this.verificacion,
+      verificacion: this.verificacion,
     };
   }
 }
+module.exports = RegisterRequest;
