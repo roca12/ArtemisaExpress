@@ -9,6 +9,8 @@ const logger = require("morgan");
 const cors = require("cors");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const MFAService = require("./service/MFAService");
+const EmailStrategy = require("./service/notificacion/EmailStrategy");
 
 dotenv.config();
 
@@ -79,17 +81,23 @@ app.use(
  * Inicializa y registra todos los controladores de rutas en el router de Express.
  */
 const initRouter = () => {
+  const emailStrategy = new EmailStrategy();
+  const mfaService = new MFAService(emailStrategy);
   const controllers = [
-    "temario",
-    "problema",
-    "usuario",
-    "link_valioso",
-    "calendario",
-    "libro",
-    "notificacion",
+    ["temario"],
+    ["problema"],
+    ["link_valioso"],
+    ["calendario"],
+    ["libro"],
+    ["notificacion"],
+    ["usuario", mfaService],
   ];
-  controllers.forEach((name) => new (require(`./controller/${name}`))(router));
+
+  controllers.forEach(
+    ([name, ...args]) => new (require(`./controller/${name}`))(router, ...args),
+  );
 };
+
 initRouter();
 app.use("/.netlify/functions/api", router);
 app.use("/", router);

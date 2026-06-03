@@ -5,7 +5,7 @@ module.exports = (mongoose) => {
       rol: { type: String },
       usuario: { type: String, unique: true, required: true },
       correo: { type: String, unique: true, required: true },
-      verificacion: { type: String },
+      verificado: { type: Boolean, default: false },
     },
     { collection: "usuario" },
   );

@@ -21,6 +21,19 @@ exports.findByCredentials = function (usuario, contrasenia) {
 };
 
 /**
+ * Marca el correo de un usuario como verificado.
+ * @param {string} correo - Correo del usuario.
+ * @returns {Promise<Object|null>} Usuario actualizado.
+ */
+exports.verificarCorreo = function (correo) {
+  return Usuario.findOneAndUpdate(
+    { correo },
+    { verificado: true },
+    { new: true },
+  );
+};
+
+/**
  * Actualiza los datos de un usuario por ID.
  * @param {Object} params - Parámetros de actualización.
  * @param {string} params.id - Identificador del usuario.
