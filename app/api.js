@@ -93,8 +93,8 @@ const initRouter = () => {
     ["usuario", mfaService],
   ];
 
-  controllers.forEach(([name, ...args]) =>
-      new (require(`./controller/${name}`))(router, ...args)
+  controllers.forEach(
+    ([name, ...args]) => new (require(`./controller/${name}`))(router, ...args),
   );
 };
 
