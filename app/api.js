@@ -96,8 +96,6 @@ const initRouter = () => {
   controllers.forEach(([name, ...args]) =>
       new (require(`./controller/${name}`))(router, ...args)
   );
-  const UsuarioController = require("./controller/usuario");
-  new UsuarioController(router, mfaService);
 };
 
 initRouter();
