@@ -81,7 +81,9 @@ class Usuario {
     }
     try {
       const resultado = await this.service.crearUsuario(request.toModel());
-      return res.status(200).json({ok:true, message:"usuario registrado exitosamente."});
+      return res
+        .status(200)
+        .json({ ok: true, message: "usuario registrado exitosamente." });
     } catch (error) {
       if (error.code === 11000) {
         console.error("Nombre de usuario o correo ya están en uso");
