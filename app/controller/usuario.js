@@ -80,7 +80,7 @@ class Usuario {
       return res.status(400).json({ ok: false, errors });
     }
     try {
-      const resultado = await this.service.crearUsuario(request.toModel());
+      await this.service.crearUsuario(request.toModel());
       return res.status(200).json({ok:true, message:"usuario registrado exitosamente."});
     } catch (error) {
       if (error.code === 11000) {
@@ -280,7 +280,7 @@ class Usuario {
           message: "Debes verificar tu correo antes de iniciar sesión",
         });
       }
-      console.error("Usuario o contraseña invalidos: ", error);
+      console.error(error.message, error);
       return res.status(401).json({
         ok: false,
         message: "Usuario o contraseña invalidos.",

@@ -1,5 +1,6 @@
 const ModelUsuario = require("../model/usuario");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { hashPassword } = require("../util/crypto/hash");
 
 /**
@@ -47,9 +48,9 @@ class UsuarioService {
    * @returns {Promise<{token: string}>} Objeto con el token JWT.
    */
   async autenticarUsuario(usuario, contrasenia) {
-    const password = hashPassword(contrasenia);
-    const [searchUser] = await this.model.findByCredentials(usuario, password);
-    if (!searchUser) throw new Error("Usuario o contraseña inválidos");
+    const searchUser = await this.model.buscarPorUsuario(usuario);
+    if (!searchUser || !bcrypt.compareSync(contrasenia, searchUser.contrasenia))
+      throw new Error("Usuario o contraseña inválidos");
     if (!searchUser.verificado) throw new Error("Correo no verificado");
     return {
       token: jwt.sign(
@@ -70,6 +71,11 @@ class UsuarioService {
    * @returns {Promise<boolean>} `true` si el token es válido.
    */
   async autenticarToken(token) {
+    if(!token) return false;
+    if(!this.captchaSecret){
+      console.log("CAPTCHA_SECRET no configurado.");
+      return false;
+    }
     const params = new URLSearchParams();
     params.append("response", token);
     params.append("secret", this.captchaSecret);
