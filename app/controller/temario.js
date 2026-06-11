@@ -1,4 +1,5 @@
 const TemarioService = require("../service/TemarioService");
+const CrearTemarioRequest = require("../dto/CrearTemarioRequest");
 
 /**
  * Controlador para las rutas relacionadas con el temario.
@@ -8,6 +9,7 @@ class Temario {
     this.service = new TemarioService();
     router.get("/temario", this.obtenerTemario.bind(this));
     router.get("/temario/supergrupos", this.obtenerSupergrupos.bind(this));
+    router.post("/temario/crear", this.crearTemario.bind(this));
   }
 
   /**
@@ -74,6 +76,16 @@ class Temario {
         .json({ ok: false, message: err.message });
     }
   }
+  async crearTemario(req, res){
+    try{
+      const dto = new CrearTemarioRequest(req.body);
+      const temario = await this.service.crearTemario(dto);
+      res.status(201).json({ok:true,message:"Temario creado exitosamente", temario:temario});
+    }catch(err){
+      res.status(err.statusCode || 500).json({ok:false,message:err.message});
+    }
+  }
+
 }
 
 module.exports = Temario;

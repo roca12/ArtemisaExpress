@@ -23,6 +23,11 @@ class TemarioService {
   async obtenerSupergrupos() {
     return await this.model.supergrupos();
   }
+
+  async crearTemario(temario){
+    if (!temario) throw new Error("El temario es obligatorio");
+    return await this.model.crearTemario(temario);
+  }
 }
 
 module.exports = TemarioService;
