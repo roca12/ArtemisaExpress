@@ -11,6 +11,7 @@ const UsuarioResponse = require("../dto/UsuarioResponse");
 class Usuario {
   constructor(router, mfaService) {
     this.service = new UsuarioService(mfaService);
+
     router.post("/usuario/crear", this.crearUsuario.bind(this));
     router.post("/usuario/autenticar", this.autenticarUsuario.bind(this));
     router.post(
@@ -26,6 +27,11 @@ class Usuario {
       this.cambiarContrasenia.bind(this),
     );
     router.post("/usuario/verificar-correo", this.verificarCorreo.bind(this));
+
+     router.get("/usuario", this.obtenerUsuarios.bind(this));
+     router.get("/usuario/:id", this.obtenerUsuario.bind(this));
+     router.get("/usuario/rol/:rol", this.obtenerUsuariosPorRol.bind(this));
+     router.delete("/usuario/:id", this.eliminarService.bind(this));
   }
 
   /**
@@ -337,6 +343,40 @@ class Usuario {
       return res.status(400).json({ ok: false, message: err.message });
     }
   }
+
+  async obtenerUsuarios(req, res) {
+  try {
+    const usuarios = await this.service.obtenerUsuarios();
+    return res.status(200).json({ ok: true, usuarios });
+  } catch (error) {
+    return res.status(500).json({ ok: false, message: error.message });
+  }
+}
+
+async obtenerUsuario(req, res) {
+  try {
+    const { id } = req.params;
+
+    const usuario = await this.service.obtenerUsuario(id);
+
+    return res.status(200).json({ ok: true, usuario });
+  } catch (error) {
+    return res.status(500).json({ ok: false, message: error.message });
+  }
+}
+
+async obtenerUsuariosPorRol(req, res) {
+  try {
+    const { rol } = req.params;
+
+    const usuarios = await this.service.obtenerUsuariosPorRol(rol);
+
+    return res.status(200).json({ ok: true, usuarios });
+  } catch (error) {
+    return res.status(500).json({ ok: false, message: error.message });
+  }
+}
+
 }
 
 module.exports = Usuario;

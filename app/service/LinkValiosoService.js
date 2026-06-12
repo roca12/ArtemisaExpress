@@ -83,5 +83,15 @@ class LinkValiosoService {
     if (!id) throw new Error("El id es obligatorio");
     return await this.model.deleteOne(id);
   }
+
+  /**
+ * Obtiene un link valioso por su ID.
+ * @param {string} id - Identificador del link valioso.
+ * @returns {Promise<Object|null>} Link encontrado o null si no existe.
+ */
+async obtenerLinkValioso(id) {
+  if (!id) throw new Error("El id es obligatorio");
+  return await this.model.findOne(id);
+}
 }
 module.exports = LinkValiosoService;

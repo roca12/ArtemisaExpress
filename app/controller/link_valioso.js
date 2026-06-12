@@ -1,16 +1,25 @@
 const LinkValiosoService = require("../service/LinkValiosoService");
+const CrearLinkValiosoRequest = require("../dto/CrearLinkValiosoRequest");
+const ActualizarLinkValiosoRequest = require("../dto/ActualizarLinkValiosoRequest");
+const LinkValiosoResponse = require("../dto/LinkValiosoResponse");
+
+const verificarToken = require("../middleware/auth");
+const authorize = require("../middleware/authorize");
 
 /**
  * Controlador para las rutas relacionadas con los links valiosos.
  */
 class LinkValiosoController {
   constructor(router) {
-    this.service = new LinkValiosoService();
-    router.get("/link-valioso/", this.obtenerLinksValiosos.bind(this));
-    router.post("/link-valioso/crear", this.crearLinkValioso.bind(this));
-    router.put("/link-valioso/:id", this.actualizarLinkValioso.bind(this));
-    router.delete("/link-valioso/:id", this.eliminarLinkValioso.bind(this));
-  }
+  this.service = new LinkValiosoService();
+  
+  router.get("/link-valioso/", this.obtenerLinksValiosos.bind(this));
+  router.get("/link-valioso/:id", this.obtenerLinkValioso.bind(this));
+
+  router.post("/link-valioso/crear", verificarToken, authorize("admin"), this.crearLinkValioso.bind(this));
+  router.put("/link-valioso/:id", verificarToken, authorize("admin"), this.actualizarLinkValioso.bind(this));
+  router.delete("/link-valioso/:id", verificarToken, authorize("admin"), this.eliminarLinkValioso.bind(this));
+}
 
   /**
    * @openapi
@@ -164,6 +173,17 @@ class LinkValiosoController {
         .json({ ok: false, message: err.message });
     }
   }
+
+   /**
+   * Obtiene un link valioso por su ID.
+   * @param {string} id - Identificador del link valioso.
+   * @returns {Promise<Object|null>} Link encontrado o null si no existe.
+   */
+  async obtenerLinkValioso(id) {
+  if (!id) throw new Error("El id es obligatorio");
+  return await this.model.findOne(id);
+  }
+
 }
 
 module.exports = LinkValiosoController;

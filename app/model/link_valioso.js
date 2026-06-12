@@ -37,3 +37,11 @@ exports.deleteOne = function (id) {
 exports.create = function (data) {
   return new LinkValioso(data).save();
 };
+/**
+ * Obtiene un link valioso por su ID.
+ * @param {string} id - Identificador del link valioso.
+ * @returns {Promise<Object|null>} Link encontrado o null si no existe.
+ */
+exports.findOne = function (id) {
+  return LinkValioso.findOne({ _id: id });
+};

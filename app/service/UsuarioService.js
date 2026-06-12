@@ -150,6 +150,38 @@ class UsuarioService {
       data: usuario,
     });
   }
+
+  async obtenerUsuarios() {
+  return await this.model.obtenerUsuarios();
+}
+
+async obtenerUsuario(id) {
+  if (!id) throw new Error("El id es obligatorio");
+  return await this.model.obtenerUsuario(id);
+}
+
+async obtenerUsuariosPorRol(rol) {
+  if (!rol) throw new Error("El rol es obligatorio");
+  return await this.model.obtenerUsuariosPorRol(rol);
+}
+
+ /**
+   * Elimina un usuario por ID.
+   * @param {string} id - Identificador del usuario.
+   * @returns {Promise<Object>} Confirmación de eliminación.
+   */
+  async eliminarUsuario(id) {
+  if (!id) throw new Error("El id es obligatorio");
+
+  const problema = await this.model.eliminarProblema(id);
+
+  if (!problema) {
+    throw new Error("Problema no encontrado");
+  }
+
+  return problema;
+}
+
 }
 
 module.exports = UsuarioService;
