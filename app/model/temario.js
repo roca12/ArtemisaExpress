@@ -14,8 +14,8 @@ exports.findAll = function () {
  * Obtiene los nombres únicos de supergrupos del temario.
  * @returns {Promise<{data: string[]}>} Objeto con la lista de nombres de supergrupos.
  */
-exports.supergrupos = function () {
-  const resultado = Temario.aggregate([
+exports.supergrupos = async function () {
+  const resultado = await Temario.aggregate([
     {
       $group: {
         _id: "$supergrupo",

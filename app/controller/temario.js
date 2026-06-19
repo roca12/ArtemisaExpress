@@ -13,8 +13,8 @@ class Temario {
   this.service = new TemarioService();
 
   router.get("/temario", this.obtenerTemario.bind(this));
-  router.get("/temario/:id", this.obtenerPorId.bind(this));
   router.get("/temario/supergrupos", this.obtenerSupergrupos.bind(this));
+  router.get("/temario/:id", this.obtenerPorId.bind(this));
 
   router.post("/temario/crear", verificarToken, authorize("admin"), this.crearTemario.bind(this));
   router.put("/temario/:id", verificarToken, authorize("admin"), this.actualizarTemario.bind(this));

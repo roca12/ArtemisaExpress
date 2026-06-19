@@ -4,6 +4,19 @@ const LoginRequest = require("../dto/LoginRequest");
 const CambiarEmailRequest = require("../dto/CambiarEmailRequest");
 const CambiarContraseniaRequest = require("../dto/CambiarContraseniaRequest");
 const UsuarioResponse = require("../dto/UsuarioResponse");
+const COOKIE_NAME = "token"
+// Usamos COOKIE_SECURE (no NODE_ENV) porque webpack reemplaza process.env.NODE_ENV
+// en tiempo de compilación; las demás variables sí se leen en runtime vía dotenv.
+const isSecure = process.env.COOKIE_SECURE === "true";
+const cookieOptions = {
+  httpOnly: true,
+  secure: isSecure,                    // local: false (http) | prod: true (https)
+  sameSite: isSecure ? "none" : "lax", // sameSite "none" exige secure
+  maxAge: 60 * 60 * 1000,
+  path: "/",
+}
+const verificarToken = require("../middleware/auth");
+const authorize = require("../middleware/authorize");
 
 /**
  * Controlador para las rutas relacionadas con los usuarios.
@@ -27,11 +40,26 @@ class Usuario {
       this.cambiarContrasenia.bind(this),
     );
     router.post("/usuario/verificar-correo", this.verificarCorreo.bind(this));
+     router.get("/usuario", verificarToken, authorize("admin"), this.obtenerUsuarios.bind(this));
+    router.get("/usuario/me", verificarToken, this.obtenerSesion.bind(this));
+     router.get("/usuario/rol/:rol", verificarToken, authorize("admin"), this.obtenerUsuariosPorRol.bind(this));
+     router.get("/usuario/:id", verificarToken, authorize("admin"), this.obtenerUsuario.bind(this));
+     router.delete("/usuario/:id", verificarToken, authorize("admin"), this.eliminarUsuario.bind(this));
+     router.post("/usuario/logout", this.logout.bind(this));
+  }
 
-     router.get("/usuario", this.obtenerUsuarios.bind(this));
-     router.get("/usuario/:id", this.obtenerUsuario.bind(this));
-     router.get("/usuario/rol/:rol", this.obtenerUsuariosPorRol.bind(this));
-     router.delete("/usuario/:id", this.eliminarService.bind(this));
+  async obtenerSesion(req, res) {
+    try{
+      const usuario = await this.service.obtenerPorNombre(req.usuario.usuario);
+      return res.status(200).json({ok:true, usuario: new UsuarioResponse(usuario)});
+    }catch(error){
+      return res.status(500).json({ok:false, message: error.message});
+    }
+  }
+
+  async logout(req, res) {
+    res.clearCookie(COOKIE_NAME, cookieOptions);
+    return res.status(200).json({ ok: true, message: "Sesión cerrada" });
   }
 
   /**
@@ -274,11 +302,12 @@ class Usuario {
     const errors = request.validate();
     if (errors.length > 0) return res.status(400).json({ ok: false, errors });
     try {
-      const resultado = await this.service.autenticarUsuario(
+      const {token} = await this.service.autenticarUsuario(
         request.usuario,
         request.contrasenia,
       );
-      return res.status(200).json(resultado);
+      res.cookie(COOKIE_NAME, token, cookieOptions);
+      return res.status(200).json({ ok: true, message: "Login exitoso" });
     } catch (error) {
       if (error.message === "Correo no verificado") {
         return res.status(403).json({
@@ -347,7 +376,9 @@ class Usuario {
   async obtenerUsuarios(req, res) {
   try {
     const usuarios = await this.service.obtenerUsuarios();
-    return res.status(200).json({ ok: true, usuarios });
+    return res.status(200).json({
+      ok: true, usuarios: usuarios.map((u) => new UsuarioResponse(u))
+    });
   } catch (error) {
     return res.status(500).json({ ok: false, message: error.message });
   }
@@ -359,7 +390,7 @@ async obtenerUsuario(req, res) {
 
     const usuario = await this.service.obtenerUsuario(id);
 
-    return res.status(200).json({ ok: true, usuario });
+    return res.status(200).json({ ok: true, usuario: new UsuarioResponse(usuario) });
   } catch (error) {
     return res.status(500).json({ ok: false, message: error.message });
   }
@@ -370,8 +401,22 @@ async obtenerUsuariosPorRol(req, res) {
     const { rol } = req.params;
 
     const usuarios = await this.service.obtenerUsuariosPorRol(rol);
+    return res.status(200).json({
+      ok: true,
+      usuarios: usuarios.map((u) => new UsuarioResponse(u))
+    });
+  } catch (error) {
+    return res.status(500).json({ ok: false, message: error.message });
+  }
+}
 
-    return res.status(200).json({ ok: true, usuarios });
+async eliminarUsuario(req, res) {
+  try {
+    const { id } = req.params;
+
+    await this.service.eliminarUsuario(id);
+
+    return res.status(200).json({ ok: true, message: "Usuario eliminado exitosamente." });
   } catch (error) {
     return res.status(500).json({ ok: false, message: error.message });
   }

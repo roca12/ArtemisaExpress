@@ -165,6 +165,11 @@ async obtenerUsuariosPorRol(rol) {
   return await this.model.obtenerUsuariosPorRol(rol);
 }
 
+async obtenerPorNombre(nombre){
+    if(!nombre) throw new Error("El nombre es obligatorio.");
+    return await this.model.buscarPorUsuario(nombre);
+}
+
  /**
    * Elimina un usuario por ID.
    * @param {string} id - Identificador del usuario.
@@ -173,13 +178,13 @@ async obtenerUsuariosPorRol(rol) {
   async eliminarUsuario(id) {
   if (!id) throw new Error("El id es obligatorio");
 
-  const problema = await this.model.eliminarProblema(id);
+  const usuario = await this.model.eliminarUsuario(id);
 
-  if (!problema) {
-    throw new Error("Problema no encontrado");
+  if (!usuario) {
+    throw new Error("Usuario no encontrado");
   }
 
-  return problema;
+  return usuario;
 }
 
 }

@@ -42,7 +42,7 @@ async crearTemario(temario) {
  */
 async obtenerPorId(id) {
   if (!id) throw new Error("El id es obligatorio");
-  return await this.model.obtenerTemario(id);
+  return await this.model.obtenerPorId(id);
 }
 
 /**

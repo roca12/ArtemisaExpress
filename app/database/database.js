@@ -8,6 +8,7 @@ configMongoose.ruta_component = require("./ruta_component.schema")(mongoose);
 configMongoose.link_valioso = require("./link_valioso.schema")(mongoose);
 configMongoose.libro = require("./libro.schema")(mongoose);
 configMongoose.notificacion = require("./notificacion.schema")(mongoose);
+configMongoose.cuaderno = require("./cuaderno.schema")(mongoose);
 module.exports = {
   configMongoose,
 };

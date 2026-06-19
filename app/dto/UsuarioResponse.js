@@ -5,7 +5,7 @@ class UsuarioResponse {
   constructor(body) {
     this.usuario = body.usuario;
     this.correo = body.correo;
-    this.role = body.role;
+    this.rol = body.rol;
   }
 }
 module.exports = UsuarioResponse;
