@@ -103,28 +103,8 @@ class Problema {
    */
   async crearProblema(req, res) {
     try {
-      const {
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      } = req.body;
-      const problema = await this.service.crearProblema({
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      });
+      const data = new CrearProblemaRequest(req.body);
+      const problema = await this.service.crearProblema(data);
       res.status(200).json(new ProblemaResponse(problema));
     } catch (err) {
       res
@@ -169,28 +149,8 @@ class Problema {
   async actualizarProblema(req, res) {
     try {
       const { id } = req.params;
-      const {
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      } = req.body;
-      const problema = await this.service.actualizarProblema(id, {
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      });
+      const data = new ActualizarProblemaRequest(req.body);
+      const problema = await this.service.actualizarProblema(id, data);
       res
         .status(200)
         .json(problema ? new ProblemaResponse(problema) : problema);

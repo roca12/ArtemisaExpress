@@ -96,13 +96,8 @@ class LinkValiosoController {
    */
   async crearLinkValioso(req, res) {
     try {
-      const { nombre, url, tags, icono } = req.body;
-      const link = await this.service.crearLinkValioso({
-        nombre,
-        url,
-        tags,
-        icono,
-      });
+      const data = new CrearLinkValiosoRequest(req.body);
+      const link = await this.service.crearLinkValioso(data);
       res.status(201).json(new LinkValiosoResponse(link));
     } catch (err) {
       res
@@ -143,13 +138,8 @@ class LinkValiosoController {
   async actualizarLinkValioso(req, res) {
     try {
       const { id } = req.params;
-      const { nombre, url, tags, icono } = req.body;
-      const link = await this.service.actualizarLinkValioso(id, {
-        nombre,
-        url,
-        tags,
-        icono,
-      });
+      const data = new ActualizarLinkValiosoRequest(req.body);
+      const link = await this.service.actualizarLinkValioso(id, data);
       res.status(200).json(link ? new LinkValiosoResponse(link) : link);
     } catch (err) {
       res

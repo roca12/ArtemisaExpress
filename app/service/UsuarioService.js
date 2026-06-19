@@ -7,6 +7,9 @@ const { hashPassword } = require("../util/crypto/hash");
  * Servicio para la gestión y autenticación de usuarios.
  */
 class UsuarioService {
+  /**
+   * @param {Object} mfaService - Servicio de verificación multifactor (MFA) usado para enviar y validar códigos por correo.
+   */
   constructor(mfaService) {
     this.model = ModelUsuario;
     this.mfaService = mfaService;
@@ -93,25 +96,6 @@ class UsuarioService {
   }
 
   /**
-   * Cambia el nombre de usuario de una cuenta identificada por correo.
-   * @param {string} correo - Correo electrónico del usuario.
-   * @param {string} nombreDeUsuario - Nuevo nombre de usuario.
-   * @returns {Promise<Object>} Usuario actualizado.
-   */
-  async cambiarNombreDeUsuario(correo, nombreDeUsuario) {
-    if (!correo) throw new Error("El correo es obligatorio.");
-    if (!nombreDeUsuario) throw new Error("El nombre de obligatorio.");
-    const checkUsuario = await this.model.buscarPorUsuario(nombreDeUsuario);
-    if (checkUsuario) throw new Error("Este nombre de usuario ya está en uso.");
-    const oldUsuario = await this.model.buscarPorCorreo(correo);
-    if (!oldUsuario) throw new Error("No hay usuario con este correo.");
-    oldUsuario.usuario = nombreDeUsuario;
-    return await this.model.actualizarUsuario({
-      id: oldUsuario.id,
-      data: oldUsuario,
-    });
-  }
-  /**
    * Cambia el correo electrónico de un usuario.
    * @param {string} nombreDeUsuario - Nombre del usuario.
    * @param {string} correo - Nuevo correo electrónico.
@@ -151,20 +135,42 @@ class UsuarioService {
     });
   }
 
+  /**
+   * Obtiene la lista de todos los usuarios.
+   * @returns {Promise<Object[]>} Lista de usuarios.
+   */
   async obtenerUsuarios() {
     return await this.model.obtenerUsuarios();
   }
 
+  /**
+   * Obtiene un usuario por su ID.
+   * @param {string} id - Identificador del usuario.
+   * @returns {Promise<Object>} Usuario encontrado.
+   * @throws {Error} Si no se proporciona el ID.
+   */
   async obtenerUsuario(id) {
     if (!id) throw new Error("El id es obligatorio");
     return await this.model.obtenerUsuario(id);
   }
 
+  /**
+   * Obtiene los usuarios que tienen un rol determinado.
+   * @param {string} rol - Rol por el cual filtrar (p. ej. "admin", "estudiante").
+   * @returns {Promise<Object[]>} Lista de usuarios con el rol indicado.
+   * @throws {Error} Si no se proporciona el rol.
+   */
   async obtenerUsuariosPorRol(rol) {
     if (!rol) throw new Error("El rol es obligatorio");
     return await this.model.obtenerUsuariosPorRol(rol);
   }
 
+  /**
+   * Busca un usuario por su nombre de usuario.
+   * @param {string} nombre - Nombre de usuario a buscar.
+   * @returns {Promise<Object>} Usuario encontrado.
+   * @throws {Error} Si no se proporciona el nombre.
+   */
   async obtenerPorNombre(nombre) {
     if (!nombre) throw new Error("El nombre es obligatorio.");
     return await this.model.buscarPorUsuario(nombre);

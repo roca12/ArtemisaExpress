@@ -33,19 +33,21 @@ class Usuario {
     );
     router.patch(
       "/usuario/cambiar-correo",
+      verificarToken,
       this.cambiarEmailDeUsuario.bind(this),
     );
     router.patch(
       "/usuario/cambiar-contrasenia",
+      verificarToken,
       this.cambiarContrasenia.bind(this),
     );
-    router.post("/usuario/verificar-correo", this.verificarCorreo.bind(this));
+     router.post("/usuario/verificar-correo", this.verificarCorreo.bind(this));
      router.get("/usuario", verificarToken, authorize("admin"), this.obtenerUsuarios.bind(this));
-    router.get("/usuario/me", verificarToken, this.obtenerSesion.bind(this));
+     router.get("/usuario/me", verificarToken, this.obtenerSesion.bind(this));
      router.get("/usuario/rol/:rol", verificarToken, authorize("admin"), this.obtenerUsuariosPorRol.bind(this));
      router.get("/usuario/:id", verificarToken, authorize("admin"), this.obtenerUsuario.bind(this));
      router.delete("/usuario/:id", verificarToken, authorize("admin"), this.eliminarUsuario.bind(this));
-     router.post("/usuario/logout", Usuario.logout.bind(this));
+     router.post("/usuario/logout", Usuario.logout);
   }
 
   /**
@@ -89,6 +91,7 @@ class Usuario {
    *   post:
    *     tags: [Usuario]
    *     summary: Cierra la sesión del usuario eliminando la cookie del token
+   *     description: Requiere autenticación (cookie de sesión válida).
    *     responses:
    *       200:
    *         description: Sesión cerrada
@@ -99,6 +102,8 @@ class Usuario {
    *               properties:
    *                 ok: { type: boolean, example: true }
    *                 message: { type: string, example: Sesión cerrada }
+   *       401:
+   *         description: Token no proporcionado, inválido o expirado
    */
   static logout(req, res) {
     res.clearCookie(COOKIE_NAME, cookieOptions);
@@ -223,16 +228,22 @@ class Usuario {
    *   patch:
    *     tags: [Usuario]
    *     summary: Cambia el correo electrónico de un usuario
+   *     description: >-
+   *       Requiere autenticación (cookie de sesión). Un usuario normal solo puede
+   *       cambiar su propio correo; el campo `nombreDeUsuario` se ignora y se toma
+   *       de la sesión. Solo un usuario con rol `admin` puede modificar otra cuenta
+   *       indicando el `nombreDeUsuario` objetivo.
    *     requestBody:
    *       required: true
    *       content:
    *         application/json:
    *           schema:
    *             type: object
-   *             required: [nombreDeUsuario, correo]
+   *             required: [correo]
    *             properties:
    *               nombreDeUsuario:
    *                 type: string
+   *                 description: Solo lo usa un admin para modificar otra cuenta; los usuarios normales lo ignoran (se toma de la sesión).
    *                 example: juan123
    *               correo:
    *                 type: string
@@ -243,8 +254,14 @@ class Usuario {
    *         description: Correo actualizado exitosamente
    *       400:
    *         description: Datos inválidos o usuario no encontrado
+   *       401:
+   *         description: Token no proporcionado, inválido o expirado
    */
   async cambiarEmailDeUsuario(req, res) {
+    // Un usuario normal solo puede modificar su propia cuenta; un admin, cualquiera.
+    if (req.usuario.rol !== "admin") {
+      req.body.nombreDeUsuario = req.usuario.usuario;
+    }
     const request = new CambiarEmailRequest(req.body);
     const errors = request.validate();
     if (errors.length > 0) return res.status(400).json({ ok: false, errors });
@@ -267,16 +284,22 @@ class Usuario {
    *   patch:
    *     tags: [Usuario]
    *     summary: Cambia la contraseña de un usuario
+   *     description: >-
+   *       Requiere autenticación (cookie de sesión). Un usuario normal solo puede
+   *       cambiar su propia contraseña; el campo `nombreDeUsuario` se ignora y se
+   *       toma de la sesión. Solo un usuario con rol `admin` puede modificar otra
+   *       cuenta indicando el `nombreDeUsuario` objetivo.
    *     requestBody:
    *       required: true
    *       content:
    *         application/json:
    *           schema:
    *             type: object
-   *             required: [nombreDeUsuario, nuevaContrasenia]
+   *             required: [nuevaContrasenia]
    *             properties:
    *               nombreDeUsuario:
    *                 type: string
+   *                 description: Solo lo usa un admin para modificar otra cuenta; los usuarios normales lo ignoran (se toma de la sesión).
    *                 example: juan123
    *               nuevaContrasenia:
    *                 type: string
@@ -287,8 +310,14 @@ class Usuario {
    *         description: Contraseña actualizada exitosamente
    *       400:
    *         description: Datos inválidos o usuario no encontrado
+   *       401:
+   *         description: Token no proporcionado, inválido o expirado
    */
   async cambiarContrasenia(req, res) {
+    // Un usuario normal solo puede modificar su propia cuenta; un admin, cualquiera.
+    if (req.usuario.rol !== "admin") {
+      req.body.nombreDeUsuario = req.usuario.usuario;
+    }
     const request = new CambiarContraseniaRequest(req.body);
     const errors = request.validate();
     if (errors.length > 0) return res.status(400).json({ ok: false, errors });
