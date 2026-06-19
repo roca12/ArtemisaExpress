@@ -11,16 +11,31 @@ const authorize = require("../middleware/authorize");
  */
 class Temario {
   constructor(router) {
-  this.service = new TemarioService();
+    this.service = new TemarioService();
 
-  router.get("/temario", this.obtenerTemario.bind(this));
-  router.get("/temario/supergrupos", this.obtenerSupergrupos.bind(this));
-  router.get("/temario/:id", this.obtenerPorId.bind(this));
+    router.get("/temario", this.obtenerTemario.bind(this));
+    router.get("/temario/supergrupos", this.obtenerSupergrupos.bind(this));
+    router.get("/temario/:id", this.obtenerPorId.bind(this));
 
-  router.post("/temario/crear", verificarToken, authorize("admin"), this.crearTemario.bind(this));
-  router.put("/temario/:id", verificarToken, authorize("admin"), this.actualizarTemario.bind(this));
-  router.delete( "/temario/:id", verificarToken, authorize("admin"), this.eliminarTemario.bind(this));
-}
+    router.post(
+      "/temario/crear",
+      verificarToken,
+      authorize("admin"),
+      this.crearTemario.bind(this),
+    );
+    router.put(
+      "/temario/:id",
+      verificarToken,
+      authorize("admin"),
+      this.actualizarTemario.bind(this),
+    );
+    router.delete(
+      "/temario/:id",
+      verificarToken,
+      authorize("admin"),
+      this.eliminarTemario.bind(this),
+    );
+  }
   /**
    * @openapi
    * /temario:
@@ -118,13 +133,19 @@ class Temario {
    *       500:
    *         description: Error interno del servidor
    */
-  async crearTemario(req, res){
-    try{
+  async crearTemario(req, res) {
+    try {
       const dto = new CrearTemarioRequest(req.body);
       const temario = await this.service.crearTemario(dto);
-      res.status(201).json({ok:true,message:"Temario creado exitosamente", temario: new TemarioResponse(temario)});
-    }catch(err){
-      res.status(err.statusCode || 500).json({ok:false,message:err.message});
+      res.status(201).json({
+        ok: true,
+        message: "Temario creado exitosamente",
+        temario: new TemarioResponse(temario),
+      });
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
   }
 
@@ -231,7 +252,10 @@ class Temario {
       const resultado = await this.service.actualizarTemario(id, data);
 
       return res.status(200).json({
-        ok: true, message: "Temario actualizado correctamente", temario: resultado ? new TemarioResponse(resultado) : resultado });
+        ok: true,
+        message: "Temario actualizado correctamente",
+        temario: resultado ? new TemarioResponse(resultado) : resultado,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, message: err.message });
     }
@@ -260,17 +284,20 @@ class Temario {
    *         description: Error interno del servidor
    */
   async eliminarTemario(req, res) {
-  try {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    await this.service.eliminarTemario(id);
+      await this.service.eliminarTemario(id);
 
-    res.status(200).json({ok: true, message: "Temario eliminado correctamente"});
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ok: false,message: err.message });
+      res
+        .status(200)
+        .json({ ok: true, message: "Temario eliminado correctamente" });
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
+    }
   }
-}
-
 }
 
 module.exports = Temario;

@@ -64,7 +64,9 @@ class Problema {
   async obtenerProblemas(req, res) {
     try {
       const problemas = await this.service.obtenerProblemas();
-      return res.status(200).json(problemas.map((p) => new ProblemaResponse(p)));
+      return res
+        .status(200)
+        .json(problemas.map((p) => new ProblemaResponse(p)));
     } catch (err) {
       return res
         .status(err.statusCode || 500)
