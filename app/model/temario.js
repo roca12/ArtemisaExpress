@@ -1,7 +1,6 @@
 const { configMongoose } = require("../database/database");
 const Temario = configMongoose.temario;
 
-
 /**
  * Obtiene todos los registros del temario.
  * @returns {Promise<{data: Array}>} Objeto con la lista de temarios.

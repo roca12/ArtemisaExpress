@@ -85,24 +85,24 @@ class ProblemaService {
    * @returns {Promise<Object>} Confirmación de eliminación.
    */
   async eliminarProblema(id) {
-  if (!id) throw new Error("El id es obligatorio");
+    if (!id) throw new Error("El id es obligatorio");
 
-  const problema = await this.model.eliminarProblema(id);
+    const problema = await this.model.eliminarProblema(id);
 
-  if (!problema) {
-    throw new Error("Problema no encontrado");
+    if (!problema) {
+      throw new Error("Problema no encontrado");
+    }
+
+    return problema;
   }
 
-  return problema;
-}
-
   /**
- * Obtiene un problema por ID.
- * @param {string} id - Identificador del problema.
- * @returns {Promise} Problema encontrado.
- */
-async obtenerProblema(id) {
-  return await this.model.obtenerProblema(id);
-}
+   * Obtiene un problema por ID.
+   * @param {string} id - Identificador del problema.
+   * @returns {Promise} Problema encontrado.
+   */
+  async obtenerProblema(id) {
+    return await this.model.obtenerProblema(id);
+  }
 }
 module.exports = ProblemaService;

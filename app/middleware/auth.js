@@ -19,20 +19,21 @@ const jwt = require("jsonwebtoken");
  * - Se responde con código HTTP 401 (Unauthorized).
  */
 function verificarToken(req, res, next) {
-  try{
+  try {
     const token = req.cookies?.token;
-    if(!token) return res.status(401).json({
-      ok: false,
-      message: "Token no proporcionado"
-    });
+    if (!token)
+      return res.status(401).json({
+        ok: false,
+        message: "Token no proporcionado",
+      });
     const payload = jwt.verify(token, process.env.JWT_KEY, {
-      algorithms: ["HS256"]
+      algorithms: ["HS256"],
     });
     req.usuario = payload;
     next();
-  }catch(error){
+  } catch (error) {
     return res.status(401).json({
-      ok:false,
+      ok: false,
       message: "Token inválido o expirado",
     });
   }

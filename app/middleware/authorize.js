@@ -6,20 +6,18 @@
  *
  */
 function authorize(rolPermitido) {
-
   function verificarRol(req, res, next) {
-
     if (!req.usuario) {
       return res.status(401).json({
         ok: false,
-        message: "Usuario no autenticado"
+        message: "Usuario no autenticado",
       });
     }
 
     if (req.usuario.rol !== rolPermitido) {
       return res.status(403).json({
         ok: false,
-        message: "No tiene permisos para realizar esta acción"
+        message: "No tiene permisos para realizar esta acción",
       });
     }
 

@@ -44,4 +44,3 @@ exports.eliminarProblema = function (id) {
 exports.obtenerProblema = function (id) {
   return Problema.findOne({ _id: id });
 };
-
