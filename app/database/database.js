@@ -1,3 +1,12 @@
+/**
+ * Registro central de modelos de Mongoose.
+ *
+ * Inicializa cada esquema y lo adjunta al objeto `configMongoose`, de modo que
+ * los modelos quedan accesibles (p. ej. `configMongoose.usuario`) desde la capa
+ * de modelos.
+ *
+ * @module database/database
+ */
 const { configMongoose } = require("./../config/dbConfig");
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;

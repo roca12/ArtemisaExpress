@@ -1,6 +1,14 @@
-// Subdocumento embebido dentro de cuaderno (no es una colección propia).
-// `contenido` guarda el JSON por bloques del editor (BlockNote / TipTap):
-// texto, código y fórmulas conviven dentro de ese JSON.
+/**
+ * Define y devuelve el esquema de subdocumento `entrada`, embebido dentro de
+ * `cuaderno` (no es una colección propia).
+ *
+ * `contenido` guarda el JSON por bloques del editor (BlockNote / TipTap):
+ * texto, código y fórmulas conviven dentro de ese JSON. Otros campos: `titulo`,
+ * `origen` (`MANUAL` | `GITHUB`), `repoUrl` y `orden`.
+ *
+ * @param {import("mongoose")} mongoose - Instancia de Mongoose.
+ * @returns {import("mongoose").Schema} Esquema de subdocumento `entrada`.
+ */
 module.exports = (mongoose) => {
   return new mongoose.Schema(
     {

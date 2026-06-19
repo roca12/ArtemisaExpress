@@ -1,3 +1,13 @@
+/**
+ * Define y devuelve el modelo Mongoose `ruta_component` (colección `ruta_component`).
+ *
+ * Representa los elementos de navegación del menú. Campos: `path`, `title`,
+ * `icon`, `class`, `extralink`, `submenu` (subelementos) y `perfil` (perfiles
+ * con acceso).
+ *
+ * @param {import("mongoose")} mongoose - Instancia de Mongoose.
+ * @returns {import("mongoose").Model} Modelo `ruta_component`.
+ */
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema(
     {

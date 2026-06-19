@@ -1,3 +1,12 @@
+/**
+ * Define y devuelve el modelo Mongoose `problema` (colección `Problemas`).
+ *
+ * Campos: `id`, `titulo`, `juez`, `alias`, `dificultad`, hasta cuatro temas
+ * asociados (`tema_1`..`tema_4`) y `url`.
+ *
+ * @param {import("mongoose")} mongoose - Instancia de Mongoose.
+ * @returns {import("mongoose").Model} Modelo `problema`.
+ */
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema(
     {

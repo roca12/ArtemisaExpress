@@ -1,3 +1,12 @@
+/**
+ * Configuración de Cloudinary y del middleware de subida de archivos (multer).
+ *
+ * Configura las credenciales de Cloudinary desde variables de entorno y expone
+ * un middleware `multer` que almacena los archivos en la carpeta
+ * `artemisa/libros` como recurso `raw`, limitado a PDFs de hasta 10 MB.
+ *
+ * @module config/cloudinary
+ */
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");

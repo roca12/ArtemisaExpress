@@ -84,6 +84,39 @@ class Temario {
         .json({ ok: false, message: err.message });
     }
   }
+  /**
+   * @openapi
+   * /temario/crear:
+   *   post:
+   *     tags: [Temario]
+   *     summary: Crea un nuevo tema (requiere rol admin)
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [supergrupo, tema]
+   *             properties:
+   *               supergrupo: { type: string, example: Estructuras de Datos }
+   *               tema: { type: string, example: Arreglos }
+   *               texto: { type: string }
+   *               complejidad_tiempo: { type: string, example: O(n) }
+   *               java: { type: string }
+   *               cpp: { type: string }
+   *               py: { type: string }
+   *               orden: { type: number, example: 1 }
+   *               suborden: { type: number, example: 1 }
+   *     responses:
+   *       201:
+   *         description: Temario creado exitosamente
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
   async crearTemario(req, res){
     try{
       const dto = new CrearTemarioRequest(req.body);
@@ -94,7 +127,26 @@ class Temario {
     }
   }
 
-   
+  /**
+   * @openapi
+   * /temario/{id}:
+   *   get:
+   *     tags: [Temario]
+   *     summary: Obtiene un tema por su ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del tema
+   *     responses:
+   *       200:
+   *         description: Tema encontrado
+   *       400:
+   *         description: El id es requerido
+   *       500:
+   *         description: Error interno del servidor
+   */
   async obtenerPorId(req, res) {
     const { id } = req.params;
     if (!id) {
@@ -111,6 +163,46 @@ class Temario {
     }
   }
 
+  /**
+   * @openapi
+   * /temario/{id}:
+   *   put:
+   *     tags: [Temario]
+   *     summary: Actualiza un tema existente (requiere rol admin)
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del tema a actualizar
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               supergrupo: { type: string }
+   *               tema: { type: string }
+   *               texto: { type: string }
+   *               complejidad_tiempo: { type: string }
+   *               java: { type: string }
+   *               cpp: { type: string }
+   *               py: { type: string }
+   *               orden: { type: number }
+   *               suborden: { type: number }
+   *               fecha_modificacion: { type: string }
+   *     responses:
+   *       200:
+   *         description: Temario actualizado correctamente
+   *       400:
+   *         description: El id es requerido
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
   async actualizarTemario(req, res) {
     const { id } = req.params;
     const request = new ActualizarTemarioRequest(req.body);
@@ -142,6 +234,28 @@ class Temario {
     }
   }
 
+  /**
+   * @openapi
+   * /temario/{id}:
+   *   delete:
+   *     tags: [Temario]
+   *     summary: Elimina un tema por ID (requiere rol admin)
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del tema a eliminar
+   *     responses:
+   *       200:
+   *         description: Temario eliminado correctamente
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
   async eliminarTemario(req, res) {
   try {
     const { id } = req.params;

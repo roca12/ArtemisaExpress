@@ -48,6 +48,32 @@ class Usuario {
      router.post("/usuario/logout", this.logout.bind(this));
   }
 
+  /**
+   * @openapi
+   * /usuario/me:
+   *   get:
+   *     tags: [Usuario]
+   *     summary: Obtiene los datos del usuario autenticado en la sesión actual
+   *     responses:
+   *       200:
+   *         description: Datos del usuario en sesión
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 ok: { type: boolean, example: true }
+   *                 usuario:
+   *                   type: object
+   *                   properties:
+   *                     usuario: { type: string, example: juan123 }
+   *                     correo: { type: string, example: juan@ejemplo.com }
+   *                     rol: { type: string, example: estudiante }
+   *       401:
+   *         description: Token no proporcionado, inválido o expirado
+   *       500:
+   *         description: Error interno del servidor
+   */
   async obtenerSesion(req, res) {
     try{
       const usuario = await this.service.obtenerPorNombre(req.usuario.usuario);
@@ -57,6 +83,23 @@ class Usuario {
     }
   }
 
+  /**
+   * @openapi
+   * /usuario/logout:
+   *   post:
+   *     tags: [Usuario]
+   *     summary: Cierra la sesión del usuario eliminando la cookie del token
+   *     responses:
+   *       200:
+   *         description: Sesión cerrada
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 ok: { type: boolean, example: true }
+   *                 message: { type: string, example: Sesión cerrada }
+   */
   async logout(req, res) {
     res.clearCookie(COOKIE_NAME, cookieOptions);
     return res.status(200).json({ ok: true, message: "Sesión cerrada" });
@@ -373,6 +416,36 @@ class Usuario {
     }
   }
 
+  /**
+   * @openapi
+   * /usuario:
+   *   get:
+   *     tags: [Usuario]
+   *     summary: Lista todos los usuarios (requiere rol admin)
+   *     responses:
+   *       200:
+   *         description: Lista de usuarios
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 ok: { type: boolean, example: true }
+   *                 usuarios:
+   *                   type: array
+   *                   items:
+   *                     type: object
+   *                     properties:
+   *                       usuario: { type: string, example: juan123 }
+   *                       correo: { type: string, example: juan@ejemplo.com }
+   *                       rol: { type: string, example: estudiante }
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
   async obtenerUsuarios(req, res) {
   try {
     const usuarios = await this.service.obtenerUsuarios();
@@ -384,6 +457,28 @@ class Usuario {
   }
 }
 
+/**
+ * @openapi
+ * /usuario/{id}:
+ *   get:
+ *     tags: [Usuario]
+ *     summary: Obtiene un usuario por su ID (requiere rol admin)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *       401:
+ *         description: No autenticado
+ *       403:
+ *         description: No autorizado (se requiere rol admin)
+ *       500:
+ *         description: Error interno del servidor
+ */
 async obtenerUsuario(req, res) {
   try {
     const { id } = req.params;
@@ -396,6 +491,28 @@ async obtenerUsuario(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /usuario/rol/{rol}:
+ *   get:
+ *     tags: [Usuario]
+ *     summary: Lista los usuarios que tienen un rol determinado (requiere rol admin)
+ *     parameters:
+ *       - in: path
+ *         name: rol
+ *         required: true
+ *         schema: { type: string, example: estudiante }
+ *         description: Rol por el cual filtrar
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios con el rol indicado
+ *       401:
+ *         description: No autenticado
+ *       403:
+ *         description: No autorizado (se requiere rol admin)
+ *       500:
+ *         description: Error interno del servidor
+ */
 async obtenerUsuariosPorRol(req, res) {
   try {
     const { rol } = req.params;
@@ -410,6 +527,28 @@ async obtenerUsuariosPorRol(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /usuario/{id}:
+ *   delete:
+ *     tags: [Usuario]
+ *     summary: Elimina un usuario por ID (requiere rol admin)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *         description: ID del usuario a eliminar
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado exitosamente
+ *       401:
+ *         description: No autenticado
+ *       403:
+ *         description: No autorizado (se requiere rol admin)
+ *       500:
+ *         description: Error interno del servidor
+ */
 async eliminarUsuario(req, res) {
   try {
     const { id } = req.params;
