@@ -107,9 +107,9 @@ class Problema {
     try {
       const data = new CrearProblemaRequest(req.body);
       const problema = await this.service.crearProblema(data);
-      res.status(200).json(new ProblemaResponse(problema));
+      return res.status(200).json(new ProblemaResponse(problema));
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -153,11 +153,11 @@ class Problema {
       const { id } = req.params;
       const data = new ActualizarProblemaRequest(req.body);
       const problema = await this.service.actualizarProblema(id, data);
-      res
+      return res
         .status(200)
         .json(problema ? new ProblemaResponse(problema) : problema);
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -185,11 +185,11 @@ class Problema {
     try {
       const { id } = req.params;
       await this.service.eliminarProblema(id);
-      res
+      return res
         .status(200)
         .json({ ok: true, message: "Problema eliminado exitosamente." });
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -230,9 +230,9 @@ class Problema {
           .status(404)
           .json({ ok: false, message: "Problema no encontrado" });
       }
-      res.status(200).json(new ProblemaResponse(problema));
+      return res.status(200).json(new ProblemaResponse(problema));
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
