@@ -4,17 +4,17 @@ const LoginRequest = require("../dto/LoginRequest");
 const CambiarEmailRequest = require("../dto/CambiarEmailRequest");
 const CambiarContraseniaRequest = require("../dto/CambiarContraseniaRequest");
 const UsuarioResponse = require("../dto/UsuarioResponse");
-const COOKIE_NAME = "token"
+const COOKIE_NAME = "token";
 // Usamos COOKIE_SECURE (no NODE_ENV) porque webpack reemplaza process.env.NODE_ENV
 // en tiempo de compilación; las demás variables sí se leen en runtime vía dotenv.
 const isSecure = process.env.COOKIE_SECURE === "true";
 const cookieOptions = {
   httpOnly: true,
-  secure: isSecure,                    // local: false (http) | prod: true (https)
+  secure: isSecure, // local: false (http) | prod: true (https)
   sameSite: isSecure ? "none" : "lax", // sameSite "none" exige secure
   maxAge: 60 * 60 * 1000,
   path: "/",
-}
+};
 const verificarToken = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
 
@@ -40,12 +40,32 @@ class Usuario {
       this.cambiarContrasenia.bind(this),
     );
     router.post("/usuario/verificar-correo", this.verificarCorreo.bind(this));
-     router.get("/usuario", verificarToken, authorize("admin"), this.obtenerUsuarios.bind(this));
+    router.get(
+      "/usuario",
+      verificarToken,
+      authorize("admin"),
+      this.obtenerUsuarios.bind(this),
+    );
     router.get("/usuario/me", verificarToken, this.obtenerSesion.bind(this));
-     router.get("/usuario/rol/:rol", verificarToken, authorize("admin"), this.obtenerUsuariosPorRol.bind(this));
-     router.get("/usuario/:id", verificarToken, authorize("admin"), this.obtenerUsuario.bind(this));
-     router.delete("/usuario/:id", verificarToken, authorize("admin"), this.eliminarUsuario.bind(this));
-     router.post("/usuario/logout", this.logout.bind(this));
+    router.get(
+      "/usuario/rol/:rol",
+      verificarToken,
+      authorize("admin"),
+      this.obtenerUsuariosPorRol.bind(this),
+    );
+    router.get(
+      "/usuario/:id",
+      verificarToken,
+      authorize("admin"),
+      this.obtenerUsuario.bind(this),
+    );
+    router.delete(
+      "/usuario/:id",
+      verificarToken,
+      authorize("admin"),
+      this.eliminarUsuario.bind(this),
+    );
+    router.post("/usuario/logout", this.logout.bind(this));
   }
 
   /**
@@ -75,11 +95,13 @@ class Usuario {
    *         description: Error interno del servidor
    */
   async obtenerSesion(req, res) {
-    try{
+    try {
       const usuario = await this.service.obtenerPorNombre(req.usuario.usuario);
-      return res.status(200).json({ok:true, usuario: new UsuarioResponse(usuario)});
-    }catch(error){
-      return res.status(500).json({ok:false, message: error.message});
+      return res
+        .status(200)
+        .json({ ok: true, usuario: new UsuarioResponse(usuario) });
+    } catch (error) {
+      return res.status(500).json({ ok: false, message: error.message });
     }
   }
 
@@ -158,7 +180,9 @@ class Usuario {
     }
     try {
       await this.service.crearUsuario(request.toModel());
-      return res.status(200).json({ok:true, message:"usuario registrado exitosamente."});
+      return res
+        .status(200)
+        .json({ ok: true, message: "usuario registrado exitosamente." });
     } catch (error) {
       if (error.code === 11000) {
         console.error("Nombre de usuario o correo ya están en uso");
@@ -345,7 +369,7 @@ class Usuario {
     const errors = request.validate();
     if (errors.length > 0) return res.status(400).json({ ok: false, errors });
     try {
-      const {token} = await this.service.autenticarUsuario(
+      const { token } = await this.service.autenticarUsuario(
         request.usuario,
         request.contrasenia,
       );
@@ -447,120 +471,124 @@ class Usuario {
    *         description: Error interno del servidor
    */
   async obtenerUsuarios(req, res) {
-  try {
-    const usuarios = await this.service.obtenerUsuarios();
-    return res.status(200).json({
-      ok: true, usuarios: usuarios.map((u) => new UsuarioResponse(u))
-    });
-  } catch (error) {
-    return res.status(500).json({ ok: false, message: error.message });
+    try {
+      const usuarios = await this.service.obtenerUsuarios();
+      return res.status(200).json({
+        ok: true,
+        usuarios: usuarios.map((u) => new UsuarioResponse(u)),
+      });
+    } catch (error) {
+      return res.status(500).json({ ok: false, message: error.message });
+    }
   }
-}
 
-/**
- * @openapi
- * /usuario/{id}:
- *   get:
- *     tags: [Usuario]
- *     summary: Obtiene un usuario por su ID (requiere rol admin)
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
- *         description: ID del usuario
- *     responses:
- *       200:
- *         description: Usuario encontrado
- *       401:
- *         description: No autenticado
- *       403:
- *         description: No autorizado (se requiere rol admin)
- *       500:
- *         description: Error interno del servidor
- */
-async obtenerUsuario(req, res) {
-  try {
-    const { id } = req.params;
+  /**
+   * @openapi
+   * /usuario/{id}:
+   *   get:
+   *     tags: [Usuario]
+   *     summary: Obtiene un usuario por su ID (requiere rol admin)
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del usuario
+   *     responses:
+   *       200:
+   *         description: Usuario encontrado
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
+  async obtenerUsuario(req, res) {
+    try {
+      const { id } = req.params;
 
-    const usuario = await this.service.obtenerUsuario(id);
+      const usuario = await this.service.obtenerUsuario(id);
 
-    return res.status(200).json({ ok: true, usuario: new UsuarioResponse(usuario) });
-  } catch (error) {
-    return res.status(500).json({ ok: false, message: error.message });
+      return res
+        .status(200)
+        .json({ ok: true, usuario: new UsuarioResponse(usuario) });
+    } catch (error) {
+      return res.status(500).json({ ok: false, message: error.message });
+    }
   }
-}
 
-/**
- * @openapi
- * /usuario/rol/{rol}:
- *   get:
- *     tags: [Usuario]
- *     summary: Lista los usuarios que tienen un rol determinado (requiere rol admin)
- *     parameters:
- *       - in: path
- *         name: rol
- *         required: true
- *         schema: { type: string, example: estudiante }
- *         description: Rol por el cual filtrar
- *     responses:
- *       200:
- *         description: Lista de usuarios con el rol indicado
- *       401:
- *         description: No autenticado
- *       403:
- *         description: No autorizado (se requiere rol admin)
- *       500:
- *         description: Error interno del servidor
- */
-async obtenerUsuariosPorRol(req, res) {
-  try {
-    const { rol } = req.params;
+  /**
+   * @openapi
+   * /usuario/rol/{rol}:
+   *   get:
+   *     tags: [Usuario]
+   *     summary: Lista los usuarios que tienen un rol determinado (requiere rol admin)
+   *     parameters:
+   *       - in: path
+   *         name: rol
+   *         required: true
+   *         schema: { type: string, example: estudiante }
+   *         description: Rol por el cual filtrar
+   *     responses:
+   *       200:
+   *         description: Lista de usuarios con el rol indicado
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
+  async obtenerUsuariosPorRol(req, res) {
+    try {
+      const { rol } = req.params;
 
-    const usuarios = await this.service.obtenerUsuariosPorRol(rol);
-    return res.status(200).json({
-      ok: true,
-      usuarios: usuarios.map((u) => new UsuarioResponse(u))
-    });
-  } catch (error) {
-    return res.status(500).json({ ok: false, message: error.message });
+      const usuarios = await this.service.obtenerUsuariosPorRol(rol);
+      return res.status(200).json({
+        ok: true,
+        usuarios: usuarios.map((u) => new UsuarioResponse(u)),
+      });
+    } catch (error) {
+      return res.status(500).json({ ok: false, message: error.message });
+    }
   }
-}
 
-/**
- * @openapi
- * /usuario/{id}:
- *   delete:
- *     tags: [Usuario]
- *     summary: Elimina un usuario por ID (requiere rol admin)
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
- *         description: ID del usuario a eliminar
- *     responses:
- *       200:
- *         description: Usuario eliminado exitosamente
- *       401:
- *         description: No autenticado
- *       403:
- *         description: No autorizado (se requiere rol admin)
- *       500:
- *         description: Error interno del servidor
- */
-async eliminarUsuario(req, res) {
-  try {
-    const { id } = req.params;
+  /**
+   * @openapi
+   * /usuario/{id}:
+   *   delete:
+   *     tags: [Usuario]
+   *     summary: Elimina un usuario por ID (requiere rol admin)
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string }
+   *         description: ID del usuario a eliminar
+   *     responses:
+   *       200:
+   *         description: Usuario eliminado exitosamente
+   *       401:
+   *         description: No autenticado
+   *       403:
+   *         description: No autorizado (se requiere rol admin)
+   *       500:
+   *         description: Error interno del servidor
+   */
+  async eliminarUsuario(req, res) {
+    try {
+      const { id } = req.params;
 
-    await this.service.eliminarUsuario(id);
+      await this.service.eliminarUsuario(id);
 
-    return res.status(200).json({ ok: true, message: "Usuario eliminado exitosamente." });
-  } catch (error) {
-    return res.status(500).json({ ok: false, message: error.message });
+      return res
+        .status(200)
+        .json({ ok: true, message: "Usuario eliminado exitosamente." });
+    } catch (error) {
+      return res.status(500).json({ ok: false, message: error.message });
+    }
   }
-}
-
 }
 
 module.exports = Usuario;
