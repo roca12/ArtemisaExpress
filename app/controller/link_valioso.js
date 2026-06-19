@@ -1,4 +1,10 @@
 const LinkValiosoService = require("../service/LinkValiosoService");
+const CrearLinkValiosoRequest = require("../dto/CrearLinkValiosoRequest");
+const ActualizarLinkValiosoRequest = require("../dto/ActualizarLinkValiosoRequest");
+const LinkValiosoResponse = require("../dto/LinkValiosoResponse");
+
+const verificarToken = require("../middleware/auth");
+const authorize = require("../middleware/authorize");
 
 /**
  * Controlador para las rutas relacionadas con los links valiosos.
@@ -6,10 +12,28 @@ const LinkValiosoService = require("../service/LinkValiosoService");
 class LinkValiosoController {
   constructor(router) {
     this.service = new LinkValiosoService();
+
     router.get("/link-valioso/", this.obtenerLinksValiosos.bind(this));
-    router.post("/link-valioso/crear", this.crearLinkValioso.bind(this));
-    router.put("/link-valioso/:id", this.actualizarLinkValioso.bind(this));
-    router.delete("/link-valioso/:id", this.eliminarLinkValioso.bind(this));
+    router.get("/link-valioso/:id", this.obtenerLinkValioso.bind(this));
+
+    router.post(
+      "/link-valioso/crear",
+      verificarToken,
+      authorize("admin"),
+      this.crearLinkValioso.bind(this),
+    );
+    router.put(
+      "/link-valioso/:id",
+      verificarToken,
+      authorize("admin"),
+      this.actualizarLinkValioso.bind(this),
+    );
+    router.delete(
+      "/link-valioso/:id",
+      verificarToken,
+      authorize("admin"),
+      this.eliminarLinkValioso.bind(this),
+    );
   }
 
   /**
@@ -39,7 +63,7 @@ class LinkValiosoController {
   async obtenerLinksValiosos(req, res) {
     try {
       const links = await this.service.obtenerLinksValiosos();
-      res.status(200).json(links);
+      res.status(200).json(links.map((l) => new LinkValiosoResponse(l)));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -72,14 +96,9 @@ class LinkValiosoController {
    */
   async crearLinkValioso(req, res) {
     try {
-      const { nombre, url, tags, icono } = req.body;
-      const link = await this.service.crearLinkValioso({
-        nombre,
-        url,
-        tags,
-        icono,
-      });
-      res.status(201).json(link);
+      const data = new CrearLinkValiosoRequest(req.body);
+      const link = await this.service.crearLinkValioso(data);
+      res.status(201).json(new LinkValiosoResponse(link));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -119,14 +138,9 @@ class LinkValiosoController {
   async actualizarLinkValioso(req, res) {
     try {
       const { id } = req.params;
-      const { nombre, url, tags, icono } = req.body;
-      const link = await this.service.actualizarLinkValioso(id, {
-        nombre,
-        url,
-        tags,
-        icono,
-      });
-      res.status(200).json(link);
+      const data = new ActualizarLinkValiosoRequest(req.body);
+      const link = await this.service.actualizarLinkValioso(id, data);
+      res.status(200).json(link ? new LinkValiosoResponse(link) : link);
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -163,6 +177,16 @@ class LinkValiosoController {
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
+  }
+
+  /**
+   * Obtiene un link valioso por su ID.
+   * @param {string} id - Identificador del link valioso.
+   * @returns {Promise<Object|null>} Link encontrado o null si no existe.
+   */
+  async obtenerLinkValioso(id) {
+    if (!id) throw new Error("El id es obligatorio");
+    return await this.model.findOne(id);
   }
 }
 

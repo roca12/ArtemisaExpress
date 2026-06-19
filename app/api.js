@@ -11,6 +11,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const MFAService = require("./service/MFAService");
 const EmailStrategy = require("./service/notificacion/EmailStrategy");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use(
   ),
 );
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const swaggerSpec = swaggerJsdoc({

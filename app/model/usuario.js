@@ -61,3 +61,36 @@ exports.buscarPorCorreo = function (correo) {
 exports.buscarPorUsuario = function (usuario) {
   return Usuario.findOne({ usuario });
 };
+/**
+ * Busca un usuario a partir de su id y lo elimina
+ * @param id el identificador único del usuario
+ * @returns {Promise<Object>} La confirmacin de eliminación.
+ */
+exports.eliminarUsuario = function (id) {
+  return Usuario.findOneAndDelete({ _id: id });
+};
+/**
+ * Obtiene todos los usuarios.
+ * @returns {Promise<Array>}
+ */
+exports.obtenerUsuarios = function () {
+  return Usuario.find().select("rol usuario correo -_id");
+};
+
+/**
+ * Obtiene un usuario por id.
+ * @param {string} id
+ * @returns {Promise<Object|null>}
+ */
+exports.obtenerUsuario = function (id) {
+  return Usuario.findById(id).select("rol usuario correo -_id");
+};
+
+/**
+ * Obtiene los usuarios de un rol específico.
+ * @param {string} rol
+ * @returns {Promise<Array>}
+ */
+exports.obtenerUsuariosPorRol = function (rol) {
+  return Usuario.find({ rol }).select("rol usuario correo -_id");
+};

@@ -1,4 +1,10 @@
 const ProblemaService = require("../service/ProblemaService");
+const CrearProblemaRequest = require("../dto/CrearProblemaRequest");
+const ActualizarProblemaRequest = require("../dto/ActualizarProblemaRequest");
+const ProblemaResponse = require("../dto/ProblemaResponse");
+
+const verificarToken = require("../middleware/auth");
+const authorize = require("../middleware/authorize");
 
 /**
  * Controlador para las rutas relacionadas con los problemas.
@@ -6,10 +12,28 @@ const ProblemaService = require("../service/ProblemaService");
 class Problema {
   constructor(router) {
     this.service = new ProblemaService();
+
     router.get("/problema/", this.obtenerProblemas.bind(this));
-    router.post("/problema/crear", this.crearProblema.bind(this));
-    router.put("/problema/:id", this.actualizarProblema.bind(this));
-    router.delete("/problema/:id", this.eliminarProblema.bind(this));
+    router.get("/problema/:id", this.obtenerProblema.bind(this));
+
+    router.post(
+      "/problema/crear",
+      verificarToken,
+      authorize("admin"),
+      this.crearProblema.bind(this),
+    );
+    router.put(
+      "/problema/:id",
+      verificarToken,
+      authorize("admin"),
+      this.actualizarProblema.bind(this),
+    );
+    router.delete(
+      "/problema/:id",
+      verificarToken,
+      authorize("admin"),
+      this.eliminarProblema.bind(this),
+    );
   }
 
   /**
@@ -40,9 +64,11 @@ class Problema {
   async obtenerProblemas(req, res) {
     try {
       const problemas = await this.service.obtenerProblemas();
-      res.status(200).json(problemas);
+      return res
+        .status(200)
+        .json(problemas.map((p) => new ProblemaResponse(p)));
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -79,31 +105,11 @@ class Problema {
    */
   async crearProblema(req, res) {
     try {
-      const {
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      } = req.body;
-      const problema = await this.service.crearProblema({
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      });
-      res.status(200).json(problema);
+      const data = new CrearProblemaRequest(req.body);
+      const problema = await this.service.crearProblema(data);
+      return res.status(200).json(new ProblemaResponse(problema));
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -145,31 +151,13 @@ class Problema {
   async actualizarProblema(req, res) {
     try {
       const { id } = req.params;
-      const {
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      } = req.body;
-      const problema = await this.service.actualizarProblema(id, {
-        titulo,
-        juez,
-        alias,
-        dificultad,
-        tema_1,
-        tema_2,
-        tema_3,
-        tema_4,
-        url,
-      });
-      res.status(200).json(problema);
+      const data = new ActualizarProblemaRequest(req.body);
+      const problema = await this.service.actualizarProblema(id, data);
+      return res
+        .status(200)
+        .json(problema ? new ProblemaResponse(problema) : problema);
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -197,11 +185,54 @@ class Problema {
     try {
       const { id } = req.params;
       await this.service.eliminarProblema(id);
-      res
+      return res
         .status(200)
         .json({ ok: true, message: "Problema eliminado exitosamente." });
     } catch (err) {
-      res
+      return res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
+    }
+  }
+
+  /**
+   * @openapi
+   * /problema/{id}:
+   *   get:
+   *     tags: [Problema]
+   *     summary: Obtiene un problema por ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID del problema
+   *     responses:
+   *       200:
+   *         description: Problema encontrado
+   *       404:
+   *         description: Problema no encontrado
+   *       500:
+   *         description: Error interno del servidor
+   */
+  async obtenerProblema(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res
+          .status(400)
+          .json({ ok: false, message: "El id es obligatorio" });
+      }
+      const problema = await this.service.obtenerProblema(id);
+      if (!problema) {
+        return res
+          .status(404)
+          .json({ ok: false, message: "Problema no encontrado" });
+      }
+      return res.status(200).json(new ProblemaResponse(problema));
+    } catch (err) {
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }

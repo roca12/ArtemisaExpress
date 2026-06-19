@@ -1,11 +1,15 @@
 const ModelUsuario = require("../model/usuario");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { hashPassword } = require("../util/crypto/hash");
 
 /**
  * Servicio para la gestión y autenticación de usuarios.
  */
 class UsuarioService {
+  /**
+   * @param {Object} mfaService - Servicio de verificación multifactor (MFA) usado para enviar y validar códigos por correo.
+   */
   constructor(mfaService) {
     this.model = ModelUsuario;
     this.mfaService = mfaService;
@@ -47,9 +51,9 @@ class UsuarioService {
    * @returns {Promise<{token: string}>} Objeto con el token JWT.
    */
   async autenticarUsuario(usuario, contrasenia) {
-    const password = hashPassword(contrasenia);
-    const [searchUser] = await this.model.findByCredentials(usuario, password);
-    if (!searchUser) throw new Error("Usuario o contraseña inválidos");
+    const searchUser = await this.model.buscarPorUsuario(usuario);
+    if (!searchUser || !bcrypt.compareSync(contrasenia, searchUser.contrasenia))
+      throw new Error("Usuario o contraseña inválidos");
     if (!searchUser.verificado) throw new Error("Correo no verificado");
     return {
       token: jwt.sign(
@@ -70,6 +74,11 @@ class UsuarioService {
    * @returns {Promise<boolean>} `true` si el token es válido.
    */
   async autenticarToken(token) {
+    if (!token) return false;
+    if (!this.captchaSecret) {
+      console.log("CAPTCHA_SECRET no configurado.");
+      return false;
+    }
     const params = new URLSearchParams();
     params.append("response", token);
     params.append("secret", this.captchaSecret);
@@ -86,25 +95,6 @@ class UsuarioService {
     }
   }
 
-  /**
-   * Cambia el nombre de usuario de una cuenta identificada por correo.
-   * @param {string} correo - Correo electrónico del usuario.
-   * @param {string} nombreDeUsuario - Nuevo nombre de usuario.
-   * @returns {Promise<Object>} Usuario actualizado.
-   */
-  async cambiarNombreDeUsuario(correo, nombreDeUsuario) {
-    if (!correo) throw new Error("El correo es obligatorio.");
-    if (!nombreDeUsuario) throw new Error("El nombre de obligatorio.");
-    const checkUsuario = await this.model.buscarPorUsuario(nombreDeUsuario);
-    if (checkUsuario) throw new Error("Este nombre de usuario ya está en uso.");
-    const oldUsuario = await this.model.buscarPorCorreo(correo);
-    if (!oldUsuario) throw new Error("No hay usuario con este correo.");
-    oldUsuario.usuario = nombreDeUsuario;
-    return await this.model.actualizarUsuario({
-      id: oldUsuario.id,
-      data: oldUsuario,
-    });
-  }
   /**
    * Cambia el correo electrónico de un usuario.
    * @param {string} nombreDeUsuario - Nombre del usuario.
@@ -143,6 +133,64 @@ class UsuarioService {
       id: usuario.id,
       data: usuario,
     });
+  }
+
+  /**
+   * Obtiene la lista de todos los usuarios.
+   * @returns {Promise<Object[]>} Lista de usuarios.
+   */
+  async obtenerUsuarios() {
+    return await this.model.obtenerUsuarios();
+  }
+
+  /**
+   * Obtiene un usuario por su ID.
+   * @param {string} id - Identificador del usuario.
+   * @returns {Promise<Object>} Usuario encontrado.
+   * @throws {Error} Si no se proporciona el ID.
+   */
+  async obtenerUsuario(id) {
+    if (!id) throw new Error("El id es obligatorio");
+    return await this.model.obtenerUsuario(id);
+  }
+
+  /**
+   * Obtiene los usuarios que tienen un rol determinado.
+   * @param {string} rol - Rol por el cual filtrar (p. ej. "admin", "estudiante").
+   * @returns {Promise<Object[]>} Lista de usuarios con el rol indicado.
+   * @throws {Error} Si no se proporciona el rol.
+   */
+  async obtenerUsuariosPorRol(rol) {
+    if (!rol) throw new Error("El rol es obligatorio");
+    return await this.model.obtenerUsuariosPorRol(rol);
+  }
+
+  /**
+   * Busca un usuario por su nombre de usuario.
+   * @param {string} nombre - Nombre de usuario a buscar.
+   * @returns {Promise<Object>} Usuario encontrado.
+   * @throws {Error} Si no se proporciona el nombre.
+   */
+  async obtenerPorNombre(nombre) {
+    if (!nombre) throw new Error("El nombre es obligatorio.");
+    return await this.model.buscarPorUsuario(nombre);
+  }
+
+  /**
+   * Elimina un usuario por ID.
+   * @param {string} id - Identificador del usuario.
+   * @returns {Promise<Object>} Confirmación de eliminación.
+   */
+  async eliminarUsuario(id) {
+    if (!id) throw new Error("El id es obligatorio");
+
+    const usuario = await this.model.eliminarUsuario(id);
+
+    if (!usuario) {
+      throw new Error("Usuario no encontrado");
+    }
+
+    return usuario;
   }
 }
 

@@ -1,4 +1,5 @@
 const LibroService = require("../service/LibroService");
+const LibroResponse = require("../dto/LibroResponse");
 const upload = require("../config/cloudinary");
 
 /**
@@ -43,7 +44,7 @@ class LibroController {
   async obtenerLibros(req, res) {
     try {
       const libros = await this.service.obtenerLibros();
-      res.status(200).json(libros);
+      res.status(200).json(libros.map((l) => new LibroResponse(l)));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -82,7 +83,7 @@ class LibroController {
         archivoPdf,
         imagen,
       });
-      res.status(200).json(libro);
+      res.status(200).json(new LibroResponse(libro));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -128,7 +129,7 @@ class LibroController {
         archivoPdf,
         imagen,
       });
-      res.status(200).json(libro);
+      res.status(200).json(libro ? new LibroResponse(libro) : libro);
     } catch (err) {
       res
         .status(err.statusCode || 500)

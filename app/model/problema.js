@@ -35,3 +35,12 @@ exports.actualizarProblema = function ({ id, data }) {
 exports.eliminarProblema = function (id) {
   return Problema.findOneAndDelete({ _id: id });
 };
+
+/**
+ * Busca un problema a partir de su id.
+ * @param id el identificador único del problema
+ * @returns {Promise<Object>} El problema encontrado.
+ */
+exports.obtenerProblema = function (id) {
+  return Problema.findOne({ _id: id });
+};

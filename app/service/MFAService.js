@@ -1,5 +1,6 @@
 const ModelNotificacion = require("../model/notificacion");
-const { sha256 } = require("../util/crypto/hash");
+const bcrypt = require("bcrypt");
+const { hashPassword } = require("../util/crypto/hash");
 
 /**
  * Servicio para el envío y validación de códigos MFA.
@@ -27,7 +28,7 @@ class MFAService {
       plantilla: "verificacion",
       datos: {
         usuario,
-        codigo: sha256(codigo),
+        codigo: hashPassword(codigo),
         expiraEn: new Date(Date.now() + 1000 * 60 * 5),
         usado: false,
       },
@@ -49,7 +50,7 @@ class MFAService {
     const codigo = _generarCodigo();
     await this.model.updateOne(destino, "verificacion", {
       usuario,
-      codigo: sha256(codigo),
+      codigo: hashPassword(codigo),
       expiraEn: new Date(Date.now() + 1000 * 60 * 5),
       usado: false,
     });
@@ -71,7 +72,7 @@ class MFAService {
     const valido =
       !doc.datos.usado &&
       doc.datos.expiraEn > new Date() &&
-      doc.datos.codigo === sha256(codigo);
+      bcrypt.compareSync(codigo, doc.datos.codigo);
     if (valido) await this.model.marcarUsado(doc._id);
     return valido;
   }

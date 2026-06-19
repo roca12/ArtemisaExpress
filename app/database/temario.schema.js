@@ -1,3 +1,13 @@
+/**
+ * Define y devuelve el modelo Mongoose `temario` (colección `temario`).
+ *
+ * Campos: `ID`, `supergrupo`, `tema`, `texto`, `complejidad_tiempo`,
+ * snippets por lenguaje (`java`, `cpp`, `py`), `orden`, `suborden` y fechas de
+ * creación/modificación.
+ *
+ * @param {import("mongoose")} mongoose - Instancia de Mongoose.
+ * @returns {import("mongoose").Model} Modelo `temario`.
+ */
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema(
     {
