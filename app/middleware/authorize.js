@@ -6,6 +6,17 @@
  *
  */
 function authorize(rolPermitido) {
+  /**
+   * Verifica que el usuario autenticado tenga el rol permitido.
+   *
+   * Debe ejecutarse después de un middleware de autenticación que
+   * haya poblado `req.usuario` (p. ej. `verificarToken`).
+   *
+   * @param {import("express").Request} req - Petición HTTP; se espera `req.usuario` con la info del usuario.
+   * @param {import("express").Response} res - Respuesta HTTP.
+   * @param {import("express").NextFunction} next - Continúa con el siguiente middleware si la autorización es válida.
+   * @returns {void|import("express").Response} Llama a `next()` si está autorizado; en caso contrario responde 401 o 403.
+   */
   function verificarRol(req, res, next) {
     if (!req.usuario) {
       return res.status(401).json({
@@ -21,7 +32,7 @@ function authorize(rolPermitido) {
       });
     }
 
-    next();
+    return next();
   }
 
   return verificarRol;

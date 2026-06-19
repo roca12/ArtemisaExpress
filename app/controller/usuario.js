@@ -45,7 +45,7 @@ class Usuario {
      router.get("/usuario/rol/:rol", verificarToken, authorize("admin"), this.obtenerUsuariosPorRol.bind(this));
      router.get("/usuario/:id", verificarToken, authorize("admin"), this.obtenerUsuario.bind(this));
      router.delete("/usuario/:id", verificarToken, authorize("admin"), this.eliminarUsuario.bind(this));
-     router.post("/usuario/logout", this.logout.bind(this));
+     router.post("/usuario/logout", Usuario.logout.bind(this));
   }
 
   /**
@@ -100,7 +100,7 @@ class Usuario {
    *                 ok: { type: boolean, example: true }
    *                 message: { type: string, example: Sesión cerrada }
    */
-  async logout(req, res) {
+  static logout(req, res) {
     res.clearCookie(COOKIE_NAME, cookieOptions);
     return res.status(200).json({ ok: true, message: "Sesión cerrada" });
   }
@@ -253,7 +253,9 @@ class Usuario {
         request.nombreDeUsuario,
         request.correo,
       );
-      return res.status(200).json(resultado);
+      return res
+        .status(200)
+        .json(resultado ? new UsuarioResponse(resultado) : resultado);
     } catch (error) {
       return res.status(400).json({ ok: false, message: error.message });
     }
@@ -295,7 +297,9 @@ class Usuario {
         request.nombreDeUsuario,
         request.nuevaContrasenia,
       );
-      return res.status(200).json(resultado);
+      return res
+        .status(200)
+        .json(resultado ? new UsuarioResponse(resultado) : resultado);
     } catch (error) {
       return res.status(400).json({ ok: false, message: error.message });
     }

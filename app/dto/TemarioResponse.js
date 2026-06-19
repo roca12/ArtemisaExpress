@@ -4,6 +4,7 @@
 class TemarioResponse {
   /**
    * @param {Object} body - Documento del tema.
+   * @param {string} body._id - Identificador del tema (necesario para editar/eliminar).
    * @param {string} body.supergrupo - Supergrupo al que pertenece el tema.
    * @param {string} body.tema - Nombre del tema.
    * @param {string} body.texto - Contenido o descripción del tema.
@@ -17,6 +18,7 @@ class TemarioResponse {
    * @param {string} body.fecha_modificacion - Fecha de modificación.
    */
   constructor(body) {
+    this._id = body._id;
     this.supergrupo = body.supergrupo;
     this.tema = body.tema;
     this.texto = body.texto;

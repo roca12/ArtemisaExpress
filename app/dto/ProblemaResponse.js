@@ -4,6 +4,7 @@
 class ProblemaResponse {
   /**
    * @param {Object} body - Documento del problema.
+   * @param {string} body._id - Identificador del problema (necesario para editar/eliminar).
    * @param {string} body.titulo - Título del problema.
    * @param {string} body.juez - Juez en línea al que pertenece.
    * @param {number} body.alias - Alias o número de referencia del problema.
@@ -15,6 +16,7 @@ class ProblemaResponse {
    * @param {string} body.url - URL del problema.
    */
   constructor(body) {
+    this._id = body._id;
     this.titulo = body.titulo;
     this.juez = body.juez;
     this.alias = body.alias;

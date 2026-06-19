@@ -63,7 +63,7 @@ class LinkValiosoController {
   async obtenerLinksValiosos(req, res) {
     try {
       const links = await this.service.obtenerLinksValiosos();
-      res.status(200).json(links);
+      res.status(200).json(links.map((l) => new LinkValiosoResponse(l)));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -103,7 +103,7 @@ class LinkValiosoController {
         tags,
         icono,
       });
-      res.status(201).json(link);
+      res.status(201).json(new LinkValiosoResponse(link));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -150,7 +150,7 @@ class LinkValiosoController {
         tags,
         icono,
       });
-      res.status(200).json(link);
+      res.status(200).json(link ? new LinkValiosoResponse(link) : link);
     } catch (err) {
       res
         .status(err.statusCode || 500)

@@ -7,7 +7,7 @@ const Cuaderno = configMongoose.cuaderno;
  * @returns {Promise<Object[]>} Cuadernos del usuario.
  */
 exports.findByUserId = function(userId){
-    return Cuaderno.find({userId:userId}).exec();
+    return Cuaderno.find({userId}).exec();
 }
 /**
  * Obtiene todos los cuadernos marcados como públicos.

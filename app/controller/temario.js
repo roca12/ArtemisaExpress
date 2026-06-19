@@ -1,6 +1,7 @@
 const TemarioService = require("../service/TemarioService");
 const CrearTemarioRequest = require("../dto/CrearTemarioRequest");
 const ActualizarTemarioRequest = require("../dto/ActualizarTemarioRequest");
+const TemarioResponse = require("../dto/TemarioResponse");
 
 const verificarToken = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
@@ -47,7 +48,7 @@ class Temario {
   async obtenerTemario(req, res) {
     try {
       const temario = await this.service.obtenerTemario();
-      res.status(200).json(temario);
+      res.status(200).json(temario.map((t) => new TemarioResponse(t)));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -121,7 +122,7 @@ class Temario {
     try{
       const dto = new CrearTemarioRequest(req.body);
       const temario = await this.service.crearTemario(dto);
-      res.status(201).json({ok:true,message:"Temario creado exitosamente", temario:temario});
+      res.status(201).json({ok:true,message:"Temario creado exitosamente", temario: new TemarioResponse(temario)});
     }catch(err){
       res.status(err.statusCode || 500).json({ok:false,message:err.message});
     }
@@ -157,7 +158,9 @@ class Temario {
     }
     try {
       const temario = await this.service.obtenerPorId(id);
-      return res.status(200).json(temario);
+      return res
+        .status(200)
+        .json(temario ? new TemarioResponse(temario) : temario);
     } catch (err) {
       return res.status(500).json({ ok: false, message: err.message });
     }
@@ -228,7 +231,7 @@ class Temario {
       const resultado = await this.service.actualizarTemario(id, data);
 
       return res.status(200).json({
-        ok: true, message: "Temario actualizado correctamente", temario: resultado });
+        ok: true, message: "Temario actualizado correctamente", temario: resultado ? new TemarioResponse(resultado) : resultado });
     } catch (err) {
       return res.status(500).json({ ok: false, message: err.message });
     }

@@ -64,9 +64,9 @@ class Problema {
   async obtenerProblemas(req, res) {
     try {
       const problemas = await this.service.obtenerProblemas();
-      res.status(200).json(problemas);
+      return res.status(200).json(problemas.map((p) => new ProblemaResponse(p)));
     } catch (err) {
-      res
+      return res
         .status(err.statusCode || 500)
         .json({ ok: false, message: err.message });
     }
@@ -125,7 +125,7 @@ class Problema {
         tema_4,
         url,
       });
-      res.status(200).json(problema);
+      res.status(200).json(new ProblemaResponse(problema));
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -191,7 +191,9 @@ class Problema {
         tema_4,
         url,
       });
-      res.status(200).json(problema);
+      res
+        .status(200)
+        .json(problema ? new ProblemaResponse(problema) : problema);
     } catch (err) {
       res
         .status(err.statusCode || 500)
@@ -266,7 +268,7 @@ class Problema {
           .status(404)
           .json({ ok: false, message: "Problema no encontrado" });
       }
-      res.status(200).json(problema);
+      res.status(200).json(new ProblemaResponse(problema));
     } catch (err) {
       res
         .status(err.statusCode || 500)

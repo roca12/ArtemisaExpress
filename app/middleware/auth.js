@@ -30,8 +30,8 @@ function verificarToken(req, res, next) {
       algorithms: ["HS256"],
     });
     req.usuario = payload;
-    next();
-  } catch (error) {
+    return next();
+  } catch {
     return res.status(401).json({
       ok: false,
       message: "Token inválido o expirado",
