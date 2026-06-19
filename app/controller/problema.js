@@ -11,16 +11,30 @@ const authorize = require("../middleware/authorize");
  */
 class Problema {
   constructor(router) {
-  this.service = new ProblemaService();
+    this.service = new ProblemaService();
 
+    router.get("/problema/", this.obtenerProblemas.bind(this));
+    router.get("/problema/:id", this.obtenerProblema.bind(this));
 
-  router.get("/problema/", this.obtenerProblemas.bind(this));
-  router.get("/problema/:id", this.obtenerProblema.bind(this));
-
-  router.post("/problema/crear", verificarToken, authorize("admin"), this.crearProblema.bind(this));
-  router.put("/problema/:id", verificarToken, authorize("admin"), this.actualizarProblema.bind(this));
-  router.delete("/problema/:id", verificarToken, authorize("admin"), this.eliminarProblema.bind(this));
-}
+    router.post(
+      "/problema/crear",
+      verificarToken,
+      authorize("admin"),
+      this.crearProblema.bind(this),
+    );
+    router.put(
+      "/problema/:id",
+      verificarToken,
+      authorize("admin"),
+      this.actualizarProblema.bind(this),
+    );
+    router.delete(
+      "/problema/:id",
+      verificarToken,
+      authorize("admin"),
+      this.eliminarProblema.bind(this),
+    );
+  }
 
   /**
    * @openapi
@@ -218,43 +232,47 @@ class Problema {
   }
 
   /**
- * @openapi
- * /problema/{id}:
- *   get:
- *     tags: [Problema]
- *     summary: Obtiene un problema por ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del problema
- *     responses:
- *       200:
- *         description: Problema encontrado
- *       404:
- *         description: Problema no encontrado
- *       500:
- *         description: Error interno del servidor
- */
-async obtenerProblema(req, res) {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ok: false, message: "El id es obligatorio"});
+   * @openapi
+   * /problema/{id}:
+   *   get:
+   *     tags: [Problema]
+   *     summary: Obtiene un problema por ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID del problema
+   *     responses:
+   *       200:
+   *         description: Problema encontrado
+   *       404:
+   *         description: Problema no encontrado
+   *       500:
+   *         description: Error interno del servidor
+   */
+  async obtenerProblema(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res
+          .status(400)
+          .json({ ok: false, message: "El id es obligatorio" });
+      }
+      const problema = await this.service.obtenerProblema(id);
+      if (!problema) {
+        return res
+          .status(404)
+          .json({ ok: false, message: "Problema no encontrado" });
+      }
+      res.status(200).json(problema);
+    } catch (err) {
+      res
+        .status(err.statusCode || 500)
+        .json({ ok: false, message: err.message });
     }
-    const problema = await this.service.obtenerProblema(id);
-    if (!problema) {
-      return res.status(404).json({ok: false, message: "Problema no encontrado" });
-    }
-    res.status(200).json(problema);
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ ok: false, message: err.message });
   }
-}
-
-
 }
 
 module.exports = Problema;

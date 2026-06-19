@@ -71,8 +71,8 @@ class UsuarioService {
    * @returns {Promise<boolean>} `true` si el token es válido.
    */
   async autenticarToken(token) {
-    if(!token) return false;
-    if(!this.captchaSecret){
+    if (!token) return false;
+    if (!this.captchaSecret) {
       console.log("CAPTCHA_SECRET no configurado.");
       return false;
     }
@@ -152,41 +152,40 @@ class UsuarioService {
   }
 
   async obtenerUsuarios() {
-  return await this.model.obtenerUsuarios();
-}
+    return await this.model.obtenerUsuarios();
+  }
 
-async obtenerUsuario(id) {
-  if (!id) throw new Error("El id es obligatorio");
-  return await this.model.obtenerUsuario(id);
-}
+  async obtenerUsuario(id) {
+    if (!id) throw new Error("El id es obligatorio");
+    return await this.model.obtenerUsuario(id);
+  }
 
-async obtenerUsuariosPorRol(rol) {
-  if (!rol) throw new Error("El rol es obligatorio");
-  return await this.model.obtenerUsuariosPorRol(rol);
-}
+  async obtenerUsuariosPorRol(rol) {
+    if (!rol) throw new Error("El rol es obligatorio");
+    return await this.model.obtenerUsuariosPorRol(rol);
+  }
 
-async obtenerPorNombre(nombre){
-    if(!nombre) throw new Error("El nombre es obligatorio.");
+  async obtenerPorNombre(nombre) {
+    if (!nombre) throw new Error("El nombre es obligatorio.");
     return await this.model.buscarPorUsuario(nombre);
-}
+  }
 
- /**
+  /**
    * Elimina un usuario por ID.
    * @param {string} id - Identificador del usuario.
    * @returns {Promise<Object>} Confirmación de eliminación.
    */
   async eliminarUsuario(id) {
-  if (!id) throw new Error("El id es obligatorio");
+    if (!id) throw new Error("El id es obligatorio");
 
-  const usuario = await this.model.eliminarUsuario(id);
+    const usuario = await this.model.eliminarUsuario(id);
 
-  if (!usuario) {
-    throw new Error("Usuario no encontrado");
+    if (!usuario) {
+      throw new Error("Usuario no encontrado");
+    }
+
+    return usuario;
   }
-
-  return usuario;
-}
-
 }
 
 module.exports = UsuarioService;

@@ -1,5 +1,2 @@
-
-class CuadernoService{
-
-}
-module.exports=CuadernoService;
+class CuadernoService {}
+module.exports = CuadernoService;
