@@ -1,4 +1,17 @@
 const ModelLibro = require("../model/libro");
+
+/**
+ * Crea un Error de validación con `statusCode` 400 para que el controlador
+ * responda 400 (Bad Request) en lugar del 500 por defecto.
+ * @param {string} mensaje - Mensaje de error.
+ * @returns {Error} Error con `statusCode = 400`.
+ */
+function errorValidacion(mensaje) {
+  const err = new Error(mensaje);
+  err.statusCode = 400;
+  return err;
+}
+
 /**
  * Servicio para la gestión de libros.
  */
@@ -23,8 +36,8 @@ class LibroService {
    * @returns {Promise<Object>} Libro creado.
    */
   async crearLibro({ titulo, archivoPdf, imagen }) {
-    if (!titulo) throw new Error("El título es obligatorio");
-    if (!archivoPdf) throw new Error("El archivo PDF es obligatorio");
+    if (!titulo) throw errorValidacion("El título es obligatorio");
+    if (!archivoPdf) throw errorValidacion("El archivo PDF es obligatorio");
     return await this.model.createbook({ titulo, archivoPdf, imagen });
   }
 
@@ -38,7 +51,7 @@ class LibroService {
    * @returns {Promise<Object>} Libro actualizado.
    */
   async actualizarLibro(id, { titulo, archivoPdf, imagen }) {
-    if (!id) throw new Error("El id es obligatorio");
+    if (!id) throw errorValidacion("El id es obligatorio");
     const datos = {};
     if (titulo) datos.titulo = titulo;
     if (archivoPdf) datos.archivoPdf = archivoPdf;
@@ -51,7 +64,7 @@ class LibroService {
    * @returns {Promise<Object>} Resultado de la eliminación.
    */
   async eliminarLibro(id) {
-    if (!id) throw new Error("El id es obligatorio");
+    if (!id) throw errorValidacion("El id es obligatorio");
     return await this.model.deletebook({ id });
   }
 }
