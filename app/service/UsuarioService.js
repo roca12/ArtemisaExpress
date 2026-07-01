@@ -13,7 +13,7 @@ class UsuarioService {
   constructor(mfaService) {
     this.model = ModelUsuario;
     this.mfaService = mfaService;
-    this.captchaSecret = process.env.CAPTCHA_SECRET;
+    this.captchaSecret = process.env.RECAPTCHA_SECRET_KEY;
     this.captchaUrl = "https://www.google.com/recaptcha/api/siteverify";
   }
 

@@ -36,7 +36,7 @@ const allowedOrigins = rawOrigins
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
@@ -113,5 +113,54 @@ configMongoose.mongoose
 app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });
+
+/**
+ * Middleware de manejo de errores (4 argumentos).
+ *
+ * Captura los errores que se lanzan en middlewares previos al handler
+ * (por ejemplo `multer`/Cloudinary durante la subida de archivos), que de otro
+ * modo llegarían al handler por defecto de Express y devolverían un 500 con
+ * HTML. Traduce los casos conocidos a respuestas JSON con el código adecuado.
+ */
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  if (err && err.name === "MulterError") {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res
+        .status(413)
+        .json({ ok: false, message: "El archivo supera el límite de 10 MB" });
+    }
+    if (err.code === "LIMIT_UNEXPECTED_FILE") {
+      return res.status(400).json({
+        ok: false,
+        message: `Campo de archivo inesperado: "${err.field}". Usa "archivoPdf" o "imagen"`,
+      });
+    }
+    return res.status(400).json({ ok: false, message: err.message });
+  }
+
+  if (err && (err.type === "entity.too.large" || err.status === 413)) {
+    return res
+      .status(413)
+      .json({ ok: false, message: "La petición excede el tamaño permitido" });
+  }
+
+  // Si ya se empezó a enviar la respuesta, Express debe cerrar la conexión.
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  const status = err.statusCode || err.status || err.http_code || 500;
+  console.error("Error no controlado:", err);
+
+  // No exponemos detalles internos en errores 5xx.
+  const message =
+    status >= 500
+      ? "Error interno del servidor"
+      : err.error?.message || err.message || "Error interno";
+
+  return res.status(status).json({ ok: false, message });
+});
+
 module.exports = app;
 module.exports.handler = serverless(app);

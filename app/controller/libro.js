@@ -9,7 +9,11 @@ class LibroController {
   constructor(router) {
     this.service = new LibroService();
     router.get("/libro/", this.obtenerLibros.bind(this));
-    router.post("/libro/crear", this.crearLibro.bind(this));
+    router.post(
+      "/libro/crear",
+      upload.fields([{ name: "archivoPdf" }, { name: "imagen" }]),
+      this.crearLibro.bind(this),
+    );
     router.put(
       "/libro/:id",
       upload.fields([{ name: "archivoPdf" }, { name: "imagen" }]),
@@ -57,18 +61,18 @@ class LibroController {
    * /libro/crear:
    *   post:
    *     tags: [Libro]
-   *     summary: Crea un nuevo libro
+   *     summary: Crea un nuevo libro (sube archivos a Cloudinary)
    *     requestBody:
    *       required: true
    *       content:
-   *         application/json:
+   *         multipart/form-data:
    *           schema:
    *             type: object
-   *             required: [titulo]
+   *             required: [titulo, archivoPdf]
    *             properties:
    *               titulo: { type: string, example: Introducción a los Algoritmos }
-   *               archivoPdf: { type: string, example: https://url-del-pdf.com/archivo.pdf }
-   *               imagen: { type: string, example: https://url-de-imagen.com/portada.jpg }
+   *               archivoPdf: { type: string, format: binary }
+   *               imagen: { type: string, format: binary }
    *     responses:
    *       200:
    *         description: Libro creado exitosamente
@@ -77,7 +81,9 @@ class LibroController {
    */
   async crearLibro(req, res) {
     try {
-      const { titulo, archivoPdf, imagen } = req.body;
+      const { titulo } = req.body;
+      const archivoPdf = req.files?.archivoPdf?.[0]?.path;
+      const imagen = req.files?.imagen?.[0]?.path;
       const libro = await this.service.crearLibro({
         titulo,
         archivoPdf,
