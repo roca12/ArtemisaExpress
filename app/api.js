@@ -145,10 +145,20 @@ app.use((err, req, res, next) => {
       .json({ ok: false, message: "La petición excede el tamaño permitido" });
   }
 
-  const status = err.statusCode || err.http_code || 500;
-  const message =
-    (err.error && err.error.message) || err.message || "Error interno";
+  // Si ya se empezó a enviar la respuesta, Express debe cerrar la conexión.
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  const status = err.statusCode || err.status || err.http_code || 500;
   console.error("Error no controlado:", err);
+
+  // No exponemos detalles internos en errores 5xx.
+  const message =
+    status >= 500
+      ? "Error interno del servidor"
+      : err.error?.message || err.message || "Error interno";
+
   return res.status(status).json({ ok: false, message });
 });
 

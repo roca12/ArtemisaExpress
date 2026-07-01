@@ -47,6 +47,11 @@ const storage = new CloudinaryStorage({
  * Cloudinary: `archivoPdf` debe ser un PDF y `imagen` una imagen permitida.
  */
 const fileFilter = (req, file, cb) => {
+  /**
+   * Rechaza el archivo actual con un error 400 y el mensaje indicado.
+   *
+   * @param {string} mensaje - Motivo del rechazo enviado al cliente.
+   */
   const rechazar = (mensaje) => {
     const err = new Error(mensaje);
     err.statusCode = 400;
