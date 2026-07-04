@@ -11,9 +11,10 @@ const isSecure = process.env.COOKIE_SECURE === "true";
 const cookieOptions = {
   httpOnly: true,
   secure: isSecure, // local: false (http) | prod: true (https)
-  sameSite: isSecure ? "none" : "lax", // sameSite "none" exige secure
+  sameSite: isSecure ? "none" : "lax",
   maxAge: 60 * 60 * 1000,
   path: "/",
+  domain: isSecure ? process.env.COOKIE_DOMAIN : undefined,
 };
 const verificarToken = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
