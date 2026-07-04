@@ -58,7 +58,10 @@ class UsuarioService {
       throw new Error("Usuario o contraseña inválidos");
     }
 
-    const passwordMatch = bcrypt.compareSync(contrasenia, searchUser.contrasenia);
+    const passwordMatch = bcrypt.compareSync(
+      contrasenia,
+      searchUser.contrasenia,
+    );
     if (!passwordMatch) {
       console.error(`[AUTH] Contraseña incorrecta para usuario: ${usuario}`);
       throw new Error("Usuario o contraseña inválidos");
