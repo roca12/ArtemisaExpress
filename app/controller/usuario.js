@@ -14,7 +14,6 @@ const cookieOptions = {
   sameSite: isSecure ? "none" : "lax",
   maxAge: 60 * 60 * 1000,
   path: "/",
-  domain: isSecure ? process.env.COOKIE_DOMAIN : undefined,
 };
 const verificarToken = require("../middleware/auth");
 const authorize = require("../middleware/authorize");

@@ -52,9 +52,24 @@ class UsuarioService {
    */
   async autenticarUsuario(usuario, contrasenia) {
     const searchUser = await this.model.buscarPorUsuario(usuario);
-    if (!searchUser || !bcrypt.compareSync(contrasenia, searchUser.contrasenia))
+
+    if (!searchUser) {
+      console.error(`[AUTH] Usuario no encontrado: ${usuario}`);
       throw new Error("Usuario o contraseña inválidos");
-    if (!searchUser.verificado) throw new Error("Correo no verificado");
+    }
+
+    const passwordMatch = bcrypt.compareSync(contrasenia, searchUser.contrasenia);
+    if (!passwordMatch) {
+      console.error(`[AUTH] Contraseña incorrecta para usuario: ${usuario}`);
+      throw new Error("Usuario o contraseña inválidos");
+    }
+
+    if (!searchUser.verificado) {
+      console.warn(`[AUTH] Usuario ${usuario} no tiene correo verificado`);
+      throw new Error("Correo no verificado");
+    }
+
+    console.log(`[AUTH] Login exitoso para usuario: ${usuario}`);
     return {
       token: jwt.sign(
         {
