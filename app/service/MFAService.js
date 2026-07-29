@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const ModelNotificacion = require("../model/notificacion");
 const bcrypt = require("bcrypt");
 const { hashPassword } = require("../util/crypto/hash");
@@ -83,13 +84,10 @@ class MFAService {
  * @returns {string} Código generado.
  */
 function _generarCodigo() {
+  const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const chars = [];
   for (let i = 0; i < 4; i++) {
-    if (Math.random() < 0.5) {
-      chars.push(String.fromCharCode(Math.floor(Math.random() * 26) + 65));
-    } else {
-      chars.push(String.fromCharCode(Math.floor(Math.random() * 10) + 48));
-    }
+    chars.push(CHARS[crypto.randomInt(0, CHARS.length)]);
   }
   return chars.join("");
 }
